@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+  - 'https://${NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2021-07/graphql.json':
+      headers:
+        X-Shopify-Storefront-Access-Token: ${NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN}
+documents: bearbookshop/**/*.{ts,tsx}
+generates:
+  bearbookshop/types/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+  bearbookshop/shopify/documents.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node

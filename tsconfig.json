@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
+      "~/*": ["bearbookshop/*"],
       "@lib/*": ["lib/*"],
       "@utils/*": ["utils/*"],
       "@config/*": ["config/*"],
