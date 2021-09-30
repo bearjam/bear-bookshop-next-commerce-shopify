@@ -1,0 +1,33 @@
+.root {
+  @apply max-w-5xl mx-auto;
+  @apply px-4;
+}
+
+.root > h2 {
+  @apply mt-10;
+}
+
+.search {
+  @apply max-w-sm mt-8 font-display;
+}
+
+.search label {
+  font-size: 18px;
+}
+
+.books-container {
+  @apply flex flex-wrap justify-evenly;
+}
+
+/* TODO: Sort this out */
+/* .card {
+  composes: card from "../../src/styles/BookCard.module.css";
+}
+
+.button {
+  composes: button from "../../src/styles/BookCard.module.css";
+} */
+
+.next-image-container {
+  @apply flex justify-center;
+}
