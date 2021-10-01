@@ -1,7 +1,26 @@
 import { styled } from 'stitches.config'
-import tw from 'twin.macro'
 
-export const FlexCenter = styled('div', {
-  ...tw`flex justify-center items-center`,
-  '@sm': tw`block`,
+export const Flex = styled('div', {
+  display: 'flex',
+  variants: {
+    wrap: {
+      true: {
+        flexWrap: 'wrap',
+      },
+    },
+    center: {
+      true: {
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    },
+    justify: {
+      evenly: {
+        justifyContent: 'space-evenly',
+      },
+      between: {
+        justifyContent: 'space-between',
+      },
+    },
+  },
 })

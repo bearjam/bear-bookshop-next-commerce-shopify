@@ -23,8 +23,45 @@ type ProductsQueryInput = Omit<GetAllProductsQueryVariables, 'query'> & {
   tags?: string[]
 }
 
-export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
-  const vars = useMemo(() => getSearchVars({ search, tags }), [search, tags])
+export const useProductsQuery = ({
+  search,
+  tags,
+  first,
+  after,
+  last,
+  before,
+}: ProductsQueryInput = {}) => {
+  const vars = useMemo(() => {
+    let query = ''
+
+    if (search) {
+      // query += `product_type:${search} OR title:${search} OR tag:${search} `
+      query += `title:${search}*`
+    }
+
+    if (tags && tags.length > 0) {
+      query +=
+        `${search ? ' AND ' : ''}` +
+        tags.map((tag) => `tag:${tag}`).join(' AND ')
+    }
+
+    // if (brandId) {
+    //   query += `${search ? "AND " : ""}vendor:${brandId}`
+    // }
+
+    return {
+      // categoryId,
+      query,
+      first,
+      after,
+      last,
+      before,
+      // ...getSortVariables(sort, !!categoryId),
+      // ...(locale && {
+      //   locale,
+      // }),
+    }
+  }, [search, tags, first, after, last, before])
 
   return useSWR<GetAllProductsQuery>(
     [print(GetAllProductsDocument), vars],
