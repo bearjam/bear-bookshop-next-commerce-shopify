@@ -1,7 +1,7 @@
-import { styled } from "@stitches/react"
-import tw from "twin.macro"
+import { styled } from 'stitches.config'
+import tw from 'twin.macro'
 
-const Button = styled("button", {
+const Button = styled('button', {
   ...tw`text-base text-center`,
   ...tw`leading-tight tracking-wide`,
   ...tw`bg-secondary rounded-lg`,

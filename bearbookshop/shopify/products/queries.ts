@@ -3,16 +3,18 @@ import { productConnectionFragment } from './fragments'
 
 export const getAllProductsQuery = gql`
   query getAllProducts(
-    $first: Int = 150
     $query: String = ""
+    $first: Int = 150
+    $after: String
     $sortKey: ProductSortKeys = RELEVANCE
     $reverse: Boolean = false
   ) {
     products(
+      query: $query
       first: $first
+      after: $after
       sortKey: $sortKey
       reverse: $reverse
-      query: $query
     ) {
       ...productConnection
     }

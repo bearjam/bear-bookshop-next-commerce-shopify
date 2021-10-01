@@ -4,7 +4,9 @@ import React, { useMemo } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import * as z from 'zod'
 import { MultiCheckCombobox, TextField } from '~/components/inputs'
+import { Product } from '~/shopify/documents'
 import { useProductsQuery } from '~/shopify/products'
+import BookCard from '../BookCard'
 import OpacityPresence from '../OpacityPresence'
 import Spinner from '../Spinner'
 import css from './ShopIndex.module.css'
@@ -49,12 +51,20 @@ const ShopIndex = ({ tags: allTags }: Props) => {
               setSelectedItems={setTags}
               placeholder="Select tags"
             />
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+            <h2>Books</h2>
+            <div className={css['books-container']}>
+              {data.products.edges.length > 0 ? (
+                data.products.edges.map(({ cursor, node }) => (
+                  <BookCard key={cursor} product={node as Product} />
+                ))
+              ) : (
+                <h3>No books found!</h3>
+              )}
+            </div>
           </OpacityPresence>
         ) : (
           <OpacityPresence>
             <Spinner />
-            <pre>{JSON.stringify(rest, null, 2)}</pre>
           </OpacityPresence>
         )}
       </AnimatePresence>

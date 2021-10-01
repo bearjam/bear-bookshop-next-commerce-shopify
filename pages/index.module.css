@@ -1,0 +1,56 @@
+.root {
+  @apply max-w-5xl mx-auto;
+}
+
+.root p {
+  @apply my-2;
+}
+
+.root h1,
+.root h2 {
+  @apply mt-6;
+}
+
+.padded {
+  @apply px-4;
+}
+
+.splash {
+  /* position: relative; */
+}
+
+.splash > div {
+  @apply px-4;
+}
+
+.splashImg {
+  @apply relative h-48;
+}
+
+.books-container {
+  @apply flex flex-wrap justify-evenly;
+}
+
+.discover {
+  @apply mt-6;
+}
+
+@screen md {
+  .splashImg {
+    height: 20rem;
+  }
+}
+
+@screen lg {
+  .splash {
+    @apply flex flex-row-reverse justify-between;
+  }
+  .splashImg {
+    /* @apply mx-16 max-w-md; */
+    height: 25rem;
+    @apply w-3/5;
+  }
+  .splash > div:nth-child(2) {
+    @apply pt-10 max-w-sm;
+  }
+}

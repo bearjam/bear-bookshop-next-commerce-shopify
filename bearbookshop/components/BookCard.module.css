@@ -1,0 +1,30 @@
+.card {
+  @apply my-8 w-64;
+  @apply border-2 shadow-md rounded-lg;
+  @apply overflow-hidden;
+}
+
+.card img {
+  @apply h-64 w-full object-center object-contain;
+  /* @apply px-3; */
+}
+.card h4,
+.card p {
+  @apply text-center;
+}
+
+.card h4 {
+  @apply mt-3 mx-1;
+}
+
+.card p {
+  @apply font-medium;
+}
+
+.button {
+  @apply flex justify-center;
+}
+
+.button > button {
+  @apply my-4;
+}

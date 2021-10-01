@@ -25,7 +25,6 @@ type ProductsQueryInput = {
 export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
   const vars = useMemo(() => getSearchVars({ search, tags }), [search, tags])
 
-  console.log(print(GetAllProductsDocument), vars)
   return useSWR<GetAllProductsQuery>(
     [print(GetAllProductsDocument), vars],
     fetch

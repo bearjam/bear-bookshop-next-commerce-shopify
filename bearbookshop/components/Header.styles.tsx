@@ -1,5 +1,5 @@
-import { styled } from '~/lib/stitches'
 import { motion } from 'framer-motion'
+import { styled } from 'stitches.config'
 import tw from 'twin.macro'
 import Hamburger from './Hamburger'
 import Nav from './Nav'

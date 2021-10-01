@@ -1,0 +1,36 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+h1 {
+  @apply text-4xl text-primary font-display font-bold tracking-wide;
+}
+
+h2 {
+  font-size: 1.7rem;
+  @apply text-primary font-display font-bold tracking-wide;
+}
+
+h3 {
+  @apply text-xl text-primary font-display font-bold tracking-wide;
+}
+
+h4 {
+  @apply text-primary font-display font-bold tracking-wide;
+}
+
+p {
+  @apply font-body font-normal tracking-wide text-primary;
+}
+
+ul {
+  list-style: url("../public/star.svg");
+  list-style-position: inside;
+  @apply font-body mt-3 text-sm;
+}
+
+li {
+  @apply my-4;
+}

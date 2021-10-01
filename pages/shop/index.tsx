@@ -1,19 +1,13 @@
-import useSearch from '@commerce/product/use-search'
-import { CommerceProvider } from '@framework'
-import React, { useMemo } from 'react'
+import { ShopIndex } from '~/components/shop'
+import { getProductTags } from '~/shopify/products'
 
-const ShopIndexPage = () => {
-  const foo = useSearch()
-  const n = useMemo(() => foo.data?.products.length ?? 0, [foo])
-  return (
-    <div>
-      <h2>{n}</h2>
-      <pre>{JSON.stringify(foo, null, 2)}</pre>
-    </div>
-  )
+export const getStaticProps = async () => {
+  const tags = await getProductTags()
+  return {
+    props: {
+      tags,
+    },
+  }
 }
 
-ShopIndexPage.Layout = ({ children }: any) =>
-  (<CommerceProvider>{children}</CommerceProvider>) as any
-
-export default ShopIndexPage
+export default ShopIndex
