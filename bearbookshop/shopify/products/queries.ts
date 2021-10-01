@@ -6,20 +6,9 @@ export const getAllProductsQuery = gql`
     $query: String = ""
     $first: Int
     $after: String
-    $last: Int
-    $before: String
     $sortKey: ProductSortKeys = RELEVANCE
-    $reverse: Boolean = false
   ) {
-    products(
-      query: $query
-      first: $first
-      after: $after
-      last: $last
-      before: $before
-      sortKey: $sortKey
-      reverse: $reverse
-    ) {
+    products(query: $query, first: $first, after: $after, sortKey: $sortKey) {
       ...productConnection
     }
   }
@@ -30,14 +19,14 @@ export const getAllProductsQuery = gql`
 export const getCollectionProductsQuery = gql`
   query getCollectionProducts(
     $query: String!
-    $first: Int = 150
+    $first: Int!
+    $after: String
     $sortKey: ProductCollectionSortKeys = RELEVANCE
-    $reverse: Boolean = false
   ) {
     collections(first: 1, query: $query) {
       edges {
         node {
-          products(first: $first, sortKey: $sortKey, reverse: $reverse) {
+          products(first: $first, after: $after, sortKey: $sortKey) {
             ...productConnection
           }
         }

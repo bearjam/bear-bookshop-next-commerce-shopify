@@ -1,15 +1,16 @@
+import { CommerceProvider } from '@framework'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useDebouncedCallback } from 'use-debounce'
 import * as z from 'zod'
 import { MultiCheckCombobox, TextField } from '~/components/inputs'
-import { Product, ProductEdge } from '~/shopify/documents'
+import { Product } from '~/shopify/documents'
 import { useProductsQuery } from '~/shopify/products'
-import BookCard from '../BookCard'
 import OpacityPresence from '../OpacityPresence'
 import Spinner from '../Spinner'
-import BooksView from './BooksView'
+import { ProductList, ProductListItem } from './products'
 import css from './ShopIndex.module.css'
 
 type Props = {
@@ -29,10 +30,32 @@ const ShopIndex = ({ tags: allTags }: Props) => {
   )
   const setTags = (ts: string[]) =>
     void router.push({ query: { ...query, tags: ts } })
-  const { data, error } = useProductsQuery({ search: q, tags, first: 9 })
-  useEffect(() => {
-    console.log({ data, error })
-  }, [data, error])
+
+  const { data, error, size, setSize } = useProductsQuery({
+    search: q,
+    tags,
+  })
+
+  const loading = !data && !error
+
+  const hasNextPage =
+    (data && data[data?.length - 1].products.pageInfo.hasNextPage) ?? false
+
+  const loadMore = useCallback(() => void setSize((p) => p + 1), [setSize])
+
+  const [sentryRef] = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: loadMore,
+    disabled: !!error,
+    rootMargin: '0px 0px 400px 0px',
+  })
+
+  const total = data
+    ?.reduce((acc: any, v) => [...acc, ...v.products.edges], [])
+    .flat().length
+
+  useEffect(() => void console.log({ total }), [total])
 
   return (
     <div className={css.root}>
@@ -54,24 +77,25 @@ const ShopIndex = ({ tags: allTags }: Props) => {
             setSelectedItems={setTags}
             placeholder="Select tags"
           />
-          {data ? (
-            <OpacityPresence>
-              <h2>Books</h2>
-              {data.products.edges.length > 0 ? (
-                <BooksView edges={data.products.edges as ProductEdge[]} />
-              ) : (
-                <h3>No books found!</h3>
+          <ProductList>
+            {data &&
+              data.map(({ products }) =>
+                products.edges.map(({ node }) => (
+                  <ProductListItem
+                    key={node.handle}
+                    product={node as Product}
+                  />
+                ))
               )}
-            </OpacityPresence>
-          ) : (
-            <OpacityPresence>
-              <Spinner />
-            </OpacityPresence>
-          )}
+          </ProductList>
+          {hasNextPage && <Spinner ref={sentryRef} />}
         </OpacityPresence>
       </AnimatePresence>
     </div>
   )
 }
+
+ShopIndex.Layout = ({ children }: any) =>
+  (<CommerceProvider>{children}</CommerceProvider>) as any
 
 export default ShopIndex

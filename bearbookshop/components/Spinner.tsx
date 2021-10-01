@@ -1,9 +1,11 @@
-import { HTMLProps } from "react"
-import css from "./Spinner.module.css"
-import clsx from "clsx"
+import { forwardRef, HTMLProps } from 'react'
+import css from './Spinner.module.css'
+import clsx from 'clsx'
 
-const Spinner = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
-  return <div className={clsx(css.spinner, className)} {...props} />
-}
+const Spinner = forwardRef<HTMLDivElement, HTMLProps<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={clsx(css.spinner, className)} {...props} />
+  }
+)
 
 export default Spinner

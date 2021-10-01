@@ -1,6 +1,7 @@
 import { print } from 'graphql'
 import { useMemo } from 'react'
-import useSWR from 'swr'
+import useSWR, { useSWRInfinite } from 'swr'
+import { PER_PAGE } from '~/lib/const'
 import {
   GetAllProductsDocument,
   GetAllProductsQuery,
@@ -9,8 +10,13 @@ import {
   GetCollectionProductsQueryVariables,
   ProductTagsQuery,
 } from '../documents'
+import storefrontFetch from '../fetch'
 import fetch from '../fetch'
-import { getCollectionProductsQuery, productTagsQuery } from './queries'
+import {
+  getAllProductsQuery,
+  getCollectionProductsQuery,
+  productTagsQuery,
+} from './queries'
 import getSearchVars, { queryToStaticPropsGetter } from './util'
 
 export const getProductTags = async () =>
@@ -18,55 +24,36 @@ export const getProductTags = async () =>
     (x) => x.node
   )
 
-type ProductsQueryInput = Omit<GetAllProductsQueryVariables, 'query'> & {
+type ProductsQueryInput = {
   search?: string
   tags?: string[]
 }
 
-export const useProductsQuery = ({
-  search,
-  tags,
-  first,
-  after,
-  last,
-  before,
-}: ProductsQueryInput = {}) => {
-  const vars = useMemo(() => {
-    let query = ''
+const productsFetch = (query: string, first: number, after?: string) =>
+  storefrontFetch<GetAllProductsQuery, GetAllProductsQueryVariables>(
+    getAllProductsQuery,
+    { query, first, after }
+  )
 
+export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
+  const query = useMemo(() => {
+    let query = ''
     if (search) {
-      // query += `product_type:${search} OR title:${search} OR tag:${search} `
       query += `title:${search}*`
     }
-
     if (tags && tags.length > 0) {
       query +=
         `${search ? ' AND ' : ''}` +
         tags.map((tag) => `tag:${tag}`).join(' AND ')
     }
+    return query
+  }, [search, tags])
 
-    // if (brandId) {
-    //   query += `${search ? "AND " : ""}vendor:${brandId}`
-    // }
-
-    return {
-      // categoryId,
-      query,
-      first,
-      after,
-      last,
-      before,
-      // ...getSortVariables(sort, !!categoryId),
-      // ...(locale && {
-      //   locale,
-      // }),
-    }
-  }, [search, tags, first, after, last, before])
-
-  return useSWR<GetAllProductsQuery>(
-    [print(GetAllProductsDocument), vars],
-    fetch
-  )
+  return useSWRInfinite<GetAllProductsQuery>((pageIndex, prevData) => {
+    const after =
+      prevData?.products.edges[prevData.products.edges.length - 1].cursor
+    return [query, PER_PAGE, after]
+  }, productsFetch)
 }
 
 export const getHomeProps = queryToStaticPropsGetter<
