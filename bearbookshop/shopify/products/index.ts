@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import {
   GetAllProductsDocument,
   GetAllProductsQuery,
+  GetAllProductsQueryVariables,
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables,
   ProductTagsQuery,
@@ -17,7 +18,7 @@ export const getProductTags = async () =>
     (x) => x.node
   )
 
-type ProductsQueryInput = {
+type ProductsQueryInput = Omit<GetAllProductsQueryVariables, 'query'> & {
   search?: string
   tags?: string[]
 }
