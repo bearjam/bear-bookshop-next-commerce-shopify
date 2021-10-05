@@ -1,15 +1,13 @@
-import { ButtonLink, IncrementField } from '~/components/inputs'
+import { LineItem } from '@commerce/types/cart'
+import { useCart, useRemoveItem, useUpdateItem } from '@framework/cart'
+import { Cart } from '@framework/types/cart'
+import { AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
-import useSWR from 'swr'
-import css from './basket.module.css'
-import { useCart } from '@framework/cart'
-import { AnimatePresence } from 'framer-motion'
+import React from 'react'
 import { OpacityPresence, Spinner } from '~/components'
-import { LineItem } from '@commerce/types/cart'
-import { useProductByHandle } from '~/shopify/storefront/products'
+import { ButtonLink, IncrementField } from '~/components/inputs'
+import css from './basket.module.css'
 
 const LineItemRow = ({ item }: { item: LineItem }) => {
   // const [, dispatch] = useBasket()
@@ -28,6 +26,7 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
   // const stockCount = item.
 
   console.log({ item })
+  const removeItem = useRemoveItem()
 
   return (
     <tr key={item.id}>
@@ -71,12 +70,14 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
       <td>£{(item.variant.price * item.quantity).toFixed(2)}</td>
       <td>
         <button
-          onClick={() => {
+          onClick={
+            () => void removeItem({ id: item.id })
+
             // dispatch({
             //   type: 'REMOVE_PRODUCT',
             //   payload: product.slug,
             // })
-          }}
+          }
         >
           x
         </button>
@@ -85,63 +86,81 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
   )
 }
 
-const BasketPage = () => {
-  const { data } = useCart()
-  const total = data?.totalPrice ?? 0
+const BasketPageWithData = ({ cart }: { cart: Cart }) => {
+  console.log({ cart })
 
-  // query the rest of the data
+  return (
+    <OpacityPresence>
+      <h1>Basket</h1>
+      <Link href="/shop">
+        <a>
+          <h4>Continue shopping</h4>
+        </a>
+      </Link>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th></th>
+            <th>Qty.</th>
+            <th>Price</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cart.lineItems.map((lineItem) => (
+            <LineItemRow key={lineItem.id} item={lineItem} />
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <td>£{cart.subtotalPrice}</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div>
+        <h2>tmp</h2>
+        <pre>{JSON.stringify({ cart }, null, 2)}</pre>
+      </div>
+      <div className={css.button}>
+        <ButtonLink href="/api/checkout">Checkout</ButtonLink>
+      </div>
+    </OpacityPresence>
+  )
+}
+
+const BasketPage = () => {
+  const { data, isLoading, error } = useCart()
+
+  console.log({ error })
 
   return (
     <div className={css.root}>
       <AnimatePresence exitBeforeEnter>
-        {!data ? (
+        {isLoading ? (
           <OpacityPresence>
             <Spinner />
           </OpacityPresence>
-        ) : data.lineItems.length < 1 ? (
+        ) : error ? (
+          <OpacityPresence>
+            <h2>Error</h2>
+            <pre>{JSON.stringify(error, null, 2)}</pre>
+          </OpacityPresence>
+        ) : !data || data.lineItems.length < 1 ? (
           <OpacityPresence>
             <div className={css.empty}>
               <h4>Your basket is empty!</h4>
               <ButtonLink href="/shop">Back to shop</ButtonLink>
             </div>
           </OpacityPresence>
+        ) : data ? (
+          <OpacityPresence>
+            <BasketPageWithData cart={data} />
+          </OpacityPresence>
         ) : (
           <OpacityPresence>
-            <h1>Basket</h1>
-            <Link href="/shop">
-              <a>
-                <h4>Continue shopping</h4>
-              </a>
-            </Link>
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th></th>
-                  <th>Qty.</th>
-                  <th>Price</th>
-                  <th>Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.lineItems.map((lineItem) => (
-                  <LineItemRow key={lineItem.id} item={lineItem} />
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Total</th>
-                  <td>£{total}</td>
-                </tr>
-              </tfoot>
-            </table>
-            <div>
-              <h2>tmp</h2>
-              <pre>{JSON.stringify({ data }, null, 2)}</pre>
-            </div>
-            <div className={css.button}>
-              <ButtonLink href="/api/checkout">Checkout</ButtonLink>
-            </div>
+            <h2>nothing!</h2>
           </OpacityPresence>
         )}
       </AnimatePresence>

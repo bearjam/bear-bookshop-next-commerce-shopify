@@ -52,7 +52,7 @@ export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
         tags.map((tag) => `tag:${tag}`).join(' AND ')
     }
 
-    console.log(query)
+    query += ' AND available_for_sale:true'
 
     return query
   }, [search, tags])

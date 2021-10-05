@@ -6186,10 +6186,10 @@ export enum DiscountErrorCode {
   MissingArgument = 'MISSING_ARGUMENT',
   /** Exceeded maximum allowed value. */
   ExceededMax = 'EXCEEDED_MAX',
-  /** Value is outside allowed range. */
-  ValueOutsideRange = 'VALUE_OUTSIDE_RANGE',
   /** Cannot have both minimum subtotal and quantity present. */
   MinimumSubtotalAndQuantityRangeBothPresent = 'MINIMUM_SUBTOTAL_AND_QUANTITY_RANGE_BOTH_PRESENT',
+  /** Value is outside allowed range. */
+  ValueOutsideRange = 'VALUE_OUTSIDE_RANGE',
   /** Active period overlaps with other automatic discounts. At any given time, only one automatic discount can be active. */
   ActivePeriodOverlap = 'ACTIVE_PERIOD_OVERLAP',
   /** Attribute selection contains conflicting settings. */
