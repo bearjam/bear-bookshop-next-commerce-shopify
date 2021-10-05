@@ -1,0 +1,80 @@
+.root {
+  @apply max-w-2xl mx-auto mt-8 px-4;
+}
+
+.empty > h4 {
+  @apply mt-12 mb-8;
+}
+
+.root > a {
+  @apply underline;
+}
+
+.root > table button {
+  border-width: 0.5px;
+  height: 1.2rem;
+  @apply border-gray-900 w-4 mx-2;
+}
+
+.root img {
+  @apply w-16;
+}
+
+.root table {
+  @apply table-auto w-full my-6;
+}
+
+.root td {
+  @apply border-gray-900 border-b-2 border-t-2 py-2;
+}
+
+.root thead th:nth-child(2),
+.root tbody td:nth-child(2) {
+  @apply hidden;
+}
+
+.button {
+  @apply text-center mt-10;
+}
+.root th {
+  @apply font-light text-xs;
+}
+
+.root td,
+.root th {
+  @apply text-left pb-2;
+  @apply font-body text-xs;
+}
+
+.title {
+  @apply ml-8;
+}
+
+@screen sm {
+  .root thead th:nth-child(2),
+  .root tbody td:nth-child(2) {
+    display: table-cell;
+  }
+}
+@screen md {
+  .root td:nth-child(1),
+  .root th:nth-child(1) {
+    @apply pl-4;
+  }
+
+  .root td:nth-child(2) {
+    @apply w-1/4;
+  }
+
+  .root td:nth-child(3),
+  .root td:nth-child(4),
+  .root td:nth-child(5) {
+    @apply w-1/5 pl-4;
+  }
+
+  .root th:nth-child(3),
+  .root th:nth-child(4),
+  .root th:nth-child(5) {
+    @apply pl-4;
+  }
+}

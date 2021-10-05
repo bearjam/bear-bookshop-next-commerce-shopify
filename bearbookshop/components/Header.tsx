@@ -1,7 +1,6 @@
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import BearBookshopLogo from './BearBookshopLogo'
 import {
   Backdrop,
   BigNav,
@@ -12,6 +11,8 @@ import {
   SmallNav,
 } from './Header.styles'
 import { theme } from 'twin.macro'
+import BearBookshopLogo from './svg/BearBookshopLogo'
+import BasketIndicator from './BasketIndicator'
 
 const Header = () => {
   const [open, setOpen] = useState(false)
@@ -41,6 +42,7 @@ const Header = () => {
         }}
       />
       <Container>
+        <Hamburger open={open} onClick={toggleOpen} />
         <Link href="/">
           <a>
             <Branding>
@@ -48,7 +50,7 @@ const Header = () => {
             </Branding>
           </a>
         </Link>
-        <Hamburger open={open} onClick={toggleOpen} />
+        <BasketIndicator />
         <AnimatePresence>
           {open && (
             <SmallNav

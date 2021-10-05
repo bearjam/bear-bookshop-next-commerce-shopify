@@ -1,0 +1,17 @@
+.root {
+  position: relative;
+}
+
+.root div {
+  background-color: blue;
+  border-radius: 100%;
+  text-align: center;
+  position: absolute;
+  font-size: 50%;
+  font-weight: bold;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  /* height: 50%; */
+  @apply text-gray-100;
+}

@@ -3,6 +3,7 @@ import { FC, Fragment, useEffect } from 'react'
 import './_app.css'
 import tw from 'twin.macro'
 import { Header, Footer } from '~/components'
+import { CommerceProvider } from '@framework'
 const Noop: FC = ({ children }) => <>{children}</>
 
 const Main = tw.div`pt-20`
@@ -14,7 +15,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     document.body.classList?.remove('loading')
   }, [])
   return (
-    <Fragment>
+    <CommerceProvider>
       {/* <Head /> */}
       <Header />
       <Main>
@@ -23,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </Layout>
       </Main>
       <Footer />
-    </Fragment>
+    </CommerceProvider>
   )
 }
 

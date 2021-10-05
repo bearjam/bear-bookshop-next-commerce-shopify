@@ -95,7 +95,4 @@ const ShopIndex = ({ tags: allTags }: Props) => {
   )
 }
 
-ShopIndex.Layout = ({ children }: any) =>
-  (<CommerceProvider>{children}</CommerceProvider>) as any
-
 export default ShopIndex
