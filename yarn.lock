@@ -4428,6 +4428,11 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
+jsonl-parse-stringify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jsonl-parse-stringify/-/jsonl-parse-stringify-1.0.1.tgz#6feb1832282bd4b36d71cdbc3cb541c0afacceba"
+  integrity sha512-Hk9ZhMGvetqcpDHnBofKcW6tlk6OqOjkrY8+RnTW/lV1It2gNFC+4ghe0NI3JVp+1eWhIeE7shDJ1jFy+lHNpw==
+
 jsonwebtoken@^8.5.1:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"

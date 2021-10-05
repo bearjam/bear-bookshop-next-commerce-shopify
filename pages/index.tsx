@@ -2,8 +2,8 @@ import { InferGetStaticPropsType } from 'next'
 import Image from 'next/image'
 import BookCard from '~/components/BookCard'
 import { ButtonLink } from '~/components/inputs'
-import { Product } from '~/shopify/documents'
-import { getHomeProps } from '~/shopify/products'
+import { getHomeProps } from '~/shopify/storefront/products'
+import { Product } from '~/types'
 import css from './index.module.css'
 
 export const getStaticProps = getHomeProps

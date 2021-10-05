@@ -1,10 +1,17 @@
+import {
+  SHOPIFY_ADMIN_API_ENDPOINT,
+  SHOPIFY_STOREFRONT_API_ENDPOINT,
+} from '~/lib/const'
 import { requestWithHeaders } from '~/lib/fetch'
 
-const API = `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2021-07/graphql.json`
+export const storefrontFetch = requestWithHeaders(
+  SHOPIFY_STOREFRONT_API_ENDPOINT,
+  {
+    'X-Shopify-Storefront-Access-Token':
+      process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
+  }
+)
 
-const storefrontFetch = requestWithHeaders(API, {
-  'X-Shopify-Storefront-Access-Token':
-    process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
+export const adminFetch = requestWithHeaders(SHOPIFY_ADMIN_API_ENDPOINT, {
+  'X-Shopify-Access-Token': process.env.SHOPIFY_ADMIN_ACCESS_TOKEN!,
 })
-
-export default storefrontFetch

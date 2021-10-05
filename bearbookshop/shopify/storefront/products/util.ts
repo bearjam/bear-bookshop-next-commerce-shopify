@@ -1,5 +1,5 @@
+import { storefrontFetch } from '~/shopify/fetch'
 import { GetAllProductsQueryVariables } from '../documents'
-import storefrontFetch from '../fetch'
 
 export const queryToStaticPropsGetter =
   <T extends object, V extends object>(query: string, variables?: V) =>

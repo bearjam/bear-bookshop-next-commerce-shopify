@@ -1,16 +1,16 @@
 import { CommerceProvider } from '@framework'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useDebouncedCallback } from 'use-debounce'
 import * as z from 'zod'
 import { MultiCheckCombobox, TextField } from '~/components/inputs'
-import { Product } from '~/shopify/documents'
-import { useProductsQuery } from '~/shopify/products'
+import { useProductsQuery } from '~/shopify/storefront/products'
+import { Product } from '~/types'
 import OpacityPresence from '../OpacityPresence'
 import Spinner from '../Spinner'
-import { ProductList, ProductListItem } from './products'
+import { ProductList, ProductListItem } from '.'
 import css from './ShopIndex.module.css'
 
 type Props = {
@@ -31,7 +31,7 @@ const ShopIndex = ({ tags: allTags }: Props) => {
   const setTags = (ts: string[]) =>
     void router.push({ query: { ...query, tags: ts } })
 
-  const { data, error, size, setSize } = useProductsQuery({
+  const { data, error, setSize } = useProductsQuery({
     search: q,
     tags,
   })
@@ -48,14 +48,14 @@ const ShopIndex = ({ tags: allTags }: Props) => {
     hasNextPage,
     onLoadMore: loadMore,
     disabled: !!error,
-    rootMargin: '0px 0px 400px 0px',
+    // rootMargin: '0px 0px 400px 0px',
   })
 
-  const total = data
-    ?.reduce((acc: any, v) => [...acc, ...v.products.edges], [])
-    .flat().length
+  // const total = data
+  //   ?.reduce((acc: any, v) => [...acc, ...v.products.edges], [])
+  //   .flat().length
 
-  useEffect(() => void console.log({ total }), [total])
+  // useEffect(() => void console.log({ total }), [total])
 
   return (
     <div className={css.root}>

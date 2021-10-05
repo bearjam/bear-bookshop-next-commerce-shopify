@@ -1,0 +1,50 @@
+.root {
+  @apply max-w-xl mx-auto;
+  @apply px-4;
+}
+
+.root > a > h4 {
+  @apply mt-6 font-semibold;
+}
+
+.title > h3 {
+  @apply mt-6;
+}
+
+.title > h4 {
+  @apply my-2;
+}
+
+.img {
+  @apply my-4;
+}
+
+.root > div > p {
+  font-size: 16px;
+}
+
+.lower > div {
+  @apply mt-3;
+}
+
+.quantity {
+  @apply font-body;
+}
+.quantity > button {
+  border-width: 1px;
+  @apply border-blue-900 w-6 h-6 mx-4;
+}
+
+@screen sm {
+  .main {
+    @apply flex flex-row-reverse;
+    @apply justify-end;
+  }
+  .title {
+    @apply mt-10;
+  }
+  .img {
+    width: 15rem;
+    @apply mr-10 mt-10 mb-6;
+  }
+}

@@ -1,3 +1,3 @@
-import { ProductConnectionFragment } from '~/shopify/documents'
+import { ProductConnectionFragment } from '~/shopify/storefront/documents'
 
 export type Product = ProductConnectionFragment['edges'][0]['node']

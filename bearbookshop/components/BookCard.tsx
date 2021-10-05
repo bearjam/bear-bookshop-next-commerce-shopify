@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { PropsWithChildren } from 'react'
-import { Product } from '~/shopify/documents'
+import { Product } from '~/types'
 import css from './BookCard.module.css'
 import { Button } from './inputs'
 import { Flex } from './layout/flex'
@@ -10,14 +10,10 @@ type Props = PropsWithChildren<{
 }>
 
 const BookCard = ({ product }: Props) => {
-  const {
-    title,
-    priceRange: {
-      minVariantPrice: { amount: price },
-    },
-    images,
-    handle,
-  } = product
+  const { title, images, handle } = product
+  const variant = product.variants.edges[0].node
+  const price = Number(variant.priceV2.amount).toFixed(2)
+
   const imgURL = images.edges[0].node.transformedSrc
 
   const addProduct = () => {}

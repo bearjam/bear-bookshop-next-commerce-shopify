@@ -66,7 +66,7 @@ export type AppliedGiftCard = Node & {
 };
 
 /** An article in an online store blog. */
-export type Article = Node & HasMetafields & {
+export type Article = Node & HasMetafields & OnlineStorePublishable & {
   __typename?: 'Article';
   /**
    * The article's author.
@@ -97,6 +97,8 @@ export type Article = Node & HasMetafields & {
   metafield?: Maybe<Metafield>;
   /** A paginated list of metafields associated with the resource. */
   metafields: MetafieldConnection;
+  /** The URL used for viewing the resource on the shop's Online Store. Returns `null` if the resource is currently not published to the Online Store sales channel. */
+  onlineStoreUrl?: Maybe<Scalars['URL']>;
   /** The date and time when the article was published. */
   publishedAt: Scalars['DateTime'];
   /** The article’s SEO information. */
@@ -262,7 +264,7 @@ export type AvailableShippingRates = {
 };
 
 /** An online store blog. */
-export type Blog = Node & HasMetafields & {
+export type Blog = Node & HasMetafields & OnlineStorePublishable & {
   __typename?: 'Blog';
   /** Find an article by its handle. */
   articleByHandle?: Maybe<Article>;
@@ -278,6 +280,8 @@ export type Blog = Node & HasMetafields & {
   metafield?: Maybe<Metafield>;
   /** A paginated list of metafields associated with the resource. */
   metafields: MetafieldConnection;
+  /** The URL used for viewing the resource on the shop's Online Store. Returns `null` if the resource is currently not published to the Online Store sales channel. */
+  onlineStoreUrl?: Maybe<Scalars['URL']>;
   /** The blog's SEO information. */
   seo?: Maybe<Seo>;
   /** The blogs’s title. */
@@ -374,6 +378,295 @@ export enum CardBrand {
   /** JCB. */
   Jcb = 'JCB'
 }
+
+/** A cart represents the merchandise that a buyer intends to purchase, and the estimated cost associated with the cart. */
+export type Cart = Node & {
+  __typename?: 'Cart';
+  /** The attributes associated with the cart. Attributes are represented as key-value pairs. */
+  attributes: Array<Attribute>;
+  /** Information about the buyer that is interacting with the cart. */
+  buyerIdentity: CartBuyerIdentity;
+  /** The URL of the checkout for the cart. */
+  checkoutUrl: Scalars['URL'];
+  /** The date and time when the cart was created. */
+  createdAt: Scalars['DateTime'];
+  /** The discount codes that have been applied to the cart. */
+  discountCodes: Array<CartDiscountCode>;
+  /** The estimated costs that the buyer will pay at checkout. */
+  estimatedCost: CartEstimatedCost;
+  /** A globally-unique identifier. */
+  id: Scalars['ID'];
+  /** A list of lines containing information about the items the customer intends to purchase. */
+  lines: CartLineConnection;
+  /** A note that is associated with the cart. For example, the note can be a personalized message to the buyer. */
+  note?: Maybe<Scalars['String']>;
+  /** The date and time when the cart was updated. */
+  updatedAt: Scalars['DateTime'];
+};
+
+
+/** A cart represents the merchandise that a buyer intends to purchase, and the estimated cost associated with the cart. */
+export type CartLinesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['String']>;
+  last?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['String']>;
+  reverse?: Maybe<Scalars['Boolean']>;
+};
+
+/** Return type for `cartAttributesUpdate` mutation. */
+export type CartAttributesUpdatePayload = {
+  __typename?: 'CartAttributesUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** The discounts automatically applied to the cart line based on prerequisites that have been met. */
+export type CartAutomaticDiscountAllocation = CartDiscountAllocation & {
+  __typename?: 'CartAutomaticDiscountAllocation';
+  /** The discounted amount that has been applied to the cart line. */
+  discountedAmount: MoneyV2;
+  /** The title of the allocated discount. */
+  title: Scalars['String'];
+};
+
+/** Represents information about the buyer that is interacting with the cart. */
+export type CartBuyerIdentity = {
+  __typename?: 'CartBuyerIdentity';
+  /** The country where the buyer is located. */
+  countryCode?: Maybe<CountryCode>;
+  /** The customer account associated with the cart. */
+  customer?: Maybe<Customer>;
+  /** The email address of the buyer that is interacting with the cart. */
+  email?: Maybe<Scalars['String']>;
+  /** The phone number of the buyer that is interacting with the cart. */
+  phone?: Maybe<Scalars['String']>;
+};
+
+/** Specifies the input fields to update the buyer information associated with a cart. */
+export type CartBuyerIdentityInput = {
+  /** The email address of the buyer that is interacting with the cart. */
+  email?: Maybe<Scalars['String']>;
+  /** The phone number of the buyer that is interacting with the cart. */
+  phone?: Maybe<Scalars['String']>;
+  /** The country where the buyer is located. */
+  countryCode?: Maybe<CountryCode>;
+  /** The access token used to identify the customer associated with the cart. */
+  customerAccessToken?: Maybe<Scalars['String']>;
+};
+
+/** Return type for `cartBuyerIdentityUpdate` mutation. */
+export type CartBuyerIdentityUpdatePayload = {
+  __typename?: 'CartBuyerIdentityUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** The discount that has been applied to the cart line using a discount code. */
+export type CartCodeDiscountAllocation = CartDiscountAllocation & {
+  __typename?: 'CartCodeDiscountAllocation';
+  /** The code used to apply the discount. */
+  code: Scalars['String'];
+  /** The discounted amount that has been applied to the cart line. */
+  discountedAmount: MoneyV2;
+};
+
+/** Return type for `cartCreate` mutation. */
+export type CartCreatePayload = {
+  __typename?: 'CartCreatePayload';
+  /** The new cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** The discounts that have been applied to the cart line. */
+export type CartDiscountAllocation = {
+  /** The discounted amount that has been applied to the cart line. */
+  discountedAmount: MoneyV2;
+};
+
+/** The discount codes applied to the cart. */
+export type CartDiscountCode = {
+  __typename?: 'CartDiscountCode';
+  /** Whether the discount code is applicable to the cart's current contents. */
+  applicable: Scalars['Boolean'];
+  /** The code for the discount. */
+  code: Scalars['String'];
+};
+
+/** Return type for `cartDiscountCodesUpdate` mutation. */
+export type CartDiscountCodesUpdatePayload = {
+  __typename?: 'CartDiscountCodesUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** Possible error codes that could be returned by CartUserError. */
+export enum CartErrorCode {
+  /** The input value is invalid. */
+  Invalid = 'INVALID',
+  /** The input value should be less than the maximum value allowed. */
+  LessThan = 'LESS_THAN',
+  /** Merchandise line was not found in cart. */
+  InvalidMerchandiseLine = 'INVALID_MERCHANDISE_LINE',
+  /** Missing discount code. */
+  MissingDiscountCode = 'MISSING_DISCOUNT_CODE',
+  /** Missing note. */
+  MissingNote = 'MISSING_NOTE'
+}
+
+/** The estimated costs that the buyer will pay at checkout. */
+export type CartEstimatedCost = {
+  __typename?: 'CartEstimatedCost';
+  /** The estimated amount, before taxes and discounts, for the customer to pay at checkout. */
+  subtotalAmount: MoneyV2;
+  /** The estimated total amount for the customer to pay at checkout. */
+  totalAmount: MoneyV2;
+  /** The estimated duty amount for the customer to pay at checkout. */
+  totalDutyAmount?: Maybe<MoneyV2>;
+  /** The estimated tax amount for the customer to pay at checkout. */
+  totalTaxAmount?: Maybe<MoneyV2>;
+};
+
+/** Specifies the input fields to create a cart. */
+export type CartInput = {
+  /** An array of key-value pairs that contains additional information about the cart. */
+  attributes?: Maybe<Array<AttributeInput>>;
+  /** A list of merchandise lines to add to the cart. */
+  lines?: Maybe<Array<CartLineInput>>;
+  /** The discount codes to apply to the cart. */
+  discountCodes?: Maybe<Array<Scalars['String']>>;
+  /** A note that is associated with the cart. For example, the note can be a personalized message to the buyer. */
+  note?: Maybe<Scalars['String']>;
+  /** The customer associated with the cart. */
+  buyerIdentity?: Maybe<CartBuyerIdentityInput>;
+};
+
+/** Represents information about the merchandise in the cart. */
+export type CartLine = Node & {
+  __typename?: 'CartLine';
+  /** The attributes associated with the cart line. Attributes are represented as key-value pairs. */
+  attributes: Array<Attribute>;
+  /** The discounts that have been applied to the cart line. */
+  discountAllocations: Array<CartDiscountAllocation>;
+  /** The estimated cost of the merchandise that the buyer will pay for at checkout. */
+  estimatedCost: CartLineEstimatedCost;
+  /** A globally-unique identifier. */
+  id: Scalars['ID'];
+  /** The merchandise that the buyer intends to purchase. */
+  merchandise: Merchandise;
+  /** The quantity of the merchandise that the customer intends to purchase. */
+  quantity: Scalars['Int'];
+  /** The selling plan associated with the cart line and the effect that each selling plan has on variants when they're purchased. */
+  sellingPlanAllocation?: Maybe<SellingPlanAllocation>;
+};
+
+/** An auto-generated type for paginating through multiple CartLines. */
+export type CartLineConnection = {
+  __typename?: 'CartLineConnection';
+  /** A list of edges. */
+  edges: Array<CartLineEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An auto-generated type which holds one CartLine and a cursor during pagination. */
+export type CartLineEdge = {
+  __typename?: 'CartLineEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of CartLineEdge. */
+  node: CartLine;
+};
+
+/** The estimated cost of the merchandise line that the buyer will pay at checkout. */
+export type CartLineEstimatedCost = {
+  __typename?: 'CartLineEstimatedCost';
+  /** The estimated cost of the merchandise line before discounts. */
+  subtotalAmount: MoneyV2;
+  /** The estimated total cost of the merchandise line, without discounts. */
+  totalAmount: MoneyV2;
+};
+
+/** Specifies the input fields to create a merchandise line on a cart. */
+export type CartLineInput = {
+  /** An array of key-value pairs that contains additional information about the merchandise line. */
+  attributes?: Maybe<Array<AttributeInput>>;
+  /** The quantity of the merchandise. */
+  quantity?: Maybe<Scalars['Int']>;
+  /** The identifier of the merchandise that the buyer intends to purchase. */
+  merchandiseId: Scalars['ID'];
+  /** The identifier of the selling plan that the merchandise is being purchased with. */
+  sellingPlanId?: Maybe<Scalars['ID']>;
+};
+
+/** Specifies the input fields to update a line item on a cart. */
+export type CartLineUpdateInput = {
+  /** The identifier of the merchandise line. */
+  id: Scalars['ID'];
+  /** The quantity of the line item. */
+  quantity?: Maybe<Scalars['Int']>;
+  /** The identifier of the merchandise for the line item. */
+  merchandiseId?: Maybe<Scalars['ID']>;
+  /** An array of key-value pairs that contains additional information about the merchandise line. */
+  attributes?: Maybe<Array<AttributeInput>>;
+  /** The identifier of the selling plan that the merchandise is being purchased with. */
+  sellingPlanId?: Maybe<Scalars['ID']>;
+};
+
+/** Return type for `cartLinesAdd` mutation. */
+export type CartLinesAddPayload = {
+  __typename?: 'CartLinesAddPayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** Return type for `cartLinesRemove` mutation. */
+export type CartLinesRemovePayload = {
+  __typename?: 'CartLinesRemovePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** Return type for `cartLinesUpdate` mutation. */
+export type CartLinesUpdatePayload = {
+  __typename?: 'CartLinesUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** Return type for `cartNoteUpdate` mutation. */
+export type CartNoteUpdatePayload = {
+  __typename?: 'CartNoteUpdatePayload';
+  /** The updated cart. */
+  cart?: Maybe<Cart>;
+  /** The list of errors that occurred from executing the mutation. */
+  userErrors: Array<CartUserError>;
+};
+
+/** Represents an error that happens during execution of a cart mutation. */
+export type CartUserError = DisplayableError & {
+  __typename?: 'CartUserError';
+  /** The error code. */
+  code?: Maybe<CartErrorCode>;
+  /** The path to the input field that caused the error. */
+  field?: Maybe<Array<Scalars['String']>>;
+  /** The error message. */
+  message: Scalars['String'];
+};
 
 /** A container for all the information required to checkout items and pay. */
 export type Checkout = Node & {
@@ -1139,7 +1432,7 @@ export type CheckoutUserError = DisplayableError & {
 };
 
 /** A collection represents a grouping of products that a shop owner can create to organize them or make their shops easier to browse. */
-export type Collection = Node & HasMetafields & {
+export type Collection = Node & HasMetafields & OnlineStorePublishable & {
   __typename?: 'Collection';
   /** Stripped description of the collection, single line with HTML tags removed. */
   description: Scalars['String'];
@@ -1158,6 +1451,8 @@ export type Collection = Node & HasMetafields & {
   metafield?: Maybe<Metafield>;
   /** A paginated list of metafields associated with the resource. */
   metafields: MetafieldConnection;
+  /** The URL used for viewing the resource on the shop's Online Store. Returns `null` if the resource is currently not published to the Online Store sales channel. */
+  onlineStoreUrl?: Maybe<Scalars['URL']>;
   /** List of products in the collection. */
   products: ProductConnection;
   /** The collection’s name. Limit of 255 characters. */
@@ -3229,6 +3524,9 @@ export type MediaImage = Node & Media & {
   previewImage?: Maybe<Image>;
 };
 
+/** The merchandise to be purchased at checkout. */
+export type Merchandise = ProductVariant;
+
 /**
  * Metafields represent custom metadata attached to a resource. Metafields can be sorted into namespaces and are
  * comprised of keys, values, and value types.
@@ -3361,6 +3659,22 @@ export type MoneyV2Edge = {
 /** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Updates the attributes on a cart. */
+  cartAttributesUpdate?: Maybe<CartAttributesUpdatePayload>;
+  /** Updates customer information associated with a cart. */
+  cartBuyerIdentityUpdate?: Maybe<CartBuyerIdentityUpdatePayload>;
+  /** Creates a new cart. */
+  cartCreate?: Maybe<CartCreatePayload>;
+  /** Updates the discount codes applied to the cart. */
+  cartDiscountCodesUpdate?: Maybe<CartDiscountCodesUpdatePayload>;
+  /** Adds a merchandise line to the cart. */
+  cartLinesAdd?: Maybe<CartLinesAddPayload>;
+  /** Removes one or more merchandise lines from the cart. */
+  cartLinesRemove?: Maybe<CartLinesRemovePayload>;
+  /** Updates one or more merchandise lines on a cart. */
+  cartLinesUpdate?: Maybe<CartLinesUpdatePayload>;
+  /** Updates the note on the cart. */
+  cartNoteUpdate?: Maybe<CartNoteUpdatePayload>;
   /**
    * Updates the attributes of a checkout if `allowPartialAddresses` is `true`.
    * @deprecated Use `checkoutAttributesUpdateV2` instead
@@ -3494,6 +3808,61 @@ export type Mutation = {
   customerResetByUrl?: Maybe<CustomerResetByUrlPayload>;
   /** Updates an existing customer. */
   customerUpdate?: Maybe<CustomerUpdatePayload>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartAttributesUpdateArgs = {
+  attributes: Array<AttributeInput>;
+  cartId: Scalars['ID'];
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartBuyerIdentityUpdateArgs = {
+  cartId: Scalars['ID'];
+  buyerIdentity: CartBuyerIdentityInput;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartCreateArgs = {
+  input?: Maybe<CartInput>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartDiscountCodesUpdateArgs = {
+  cartId: Scalars['ID'];
+  discountCodes?: Maybe<Array<Scalars['String']>>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartLinesAddArgs = {
+  lines: Array<CartLineInput>;
+  cartId: Scalars['ID'];
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartLinesRemoveArgs = {
+  cartId: Scalars['ID'];
+  lineIds: Array<Scalars['ID']>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartLinesUpdateArgs = {
+  cartId: Scalars['ID'];
+  lines: Array<CartLineUpdateInput>;
+};
+
+
+/** The schema’s entry-point for mutations. This acts as the public, top-level API from which all mutation queries must start. */
+export type MutationCartNoteUpdateArgs = {
+  cartId: Scalars['ID'];
+  note?: Maybe<Scalars['String']>;
 };
 
 
@@ -3801,6 +4170,12 @@ export type Node = {
   id: Scalars['ID'];
 };
 
+/** Represents a resource that can be published to the Online Store sales channel. */
+export type OnlineStorePublishable = {
+  /** The URL used for viewing the resource on the shop's Online Store. Returns `null` if the resource is currently not published to the Online Store sales channel. */
+  onlineStoreUrl?: Maybe<Scalars['URL']>;
+};
+
 /** An order is a customer’s completed request to purchase one or more products from a shop. An order is created when a customer completes the checkout process, during which time they provides an email address, billing address and payment information. */
 export type Order = Node & HasMetafields & {
   __typename?: 'Order';
@@ -4076,7 +4451,7 @@ export enum OrderSortKeys {
 }
 
 /** Shopify merchants can create pages to hold static HTML content. Each Page object represents a custom page on the online store. */
-export type Page = Node & HasMetafields & {
+export type Page = Node & HasMetafields & OnlineStorePublishable & {
   __typename?: 'Page';
   /** The description of the page, complete with HTML formatting. */
   body: Scalars['HTML'];
@@ -4092,6 +4467,8 @@ export type Page = Node & HasMetafields & {
   metafield?: Maybe<Metafield>;
   /** A paginated list of metafields associated with the resource. */
   metafields: MetafieldConnection;
+  /** The URL used for viewing the resource on the shop's Online Store. Returns `null` if the resource is currently not published to the Online Store sales channel. */
+  onlineStoreUrl?: Maybe<Scalars['URL']>;
   /** The page's SEO information. */
   seo?: Maybe<Seo>;
   /** The title of the page. */
@@ -4230,7 +4607,9 @@ export enum PaymentTokenType {
   /** Shopify Pay token type. */
   ShopifyPay = 'SHOPIFY_PAY',
   /** Google Pay token type. */
-  GooglePay = 'GOOGLE_PAY'
+  GooglePay = 'GOOGLE_PAY',
+  /** Stripe token type. */
+  StripeVaultToken = 'STRIPE_VAULT_TOKEN'
 }
 
 /** The value of the percentage pricing object. */
@@ -4247,7 +4626,7 @@ export type PricingValue = MoneyV2 | PricingPercentageValue;
  * A product represents an individual item for sale in a Shopify store. Products are often physical, but they don't have to be.
  * For example, a digital download (such as a movie, music or ebook file) also qualifies as a product, as do services (such as equipment rental, work for hire, customization of another product or an extended warranty).
  */
-export type Product = Node & HasMetafields & {
+export type Product = Node & HasMetafields & OnlineStorePublishable & {
   __typename?: 'Product';
   /** Indicates if at least one product variant is available for sale. */
   availableForSale: Scalars['Boolean'];
@@ -4809,6 +5188,8 @@ export type QueryRoot = {
   __typename?: 'QueryRoot';
   /** List of the shop's articles. */
   articles: ArticleConnection;
+  /** Fetch a specific `Blog` by one of its unique attributes. */
+  blog?: Maybe<Blog>;
   /**
    * Find a blog by its handle.
    * @deprecated Use `blog` instead
@@ -4816,6 +5197,10 @@ export type QueryRoot = {
   blogByHandle?: Maybe<Blog>;
   /** List of the shop's blogs. */
   blogs: BlogConnection;
+  /** Find a cart by its ID. */
+  cart?: Maybe<Cart>;
+  /** Fetch a specific `Collection` by one of its unique attributes. */
+  collection?: Maybe<Collection>;
   /**
    * Find a collection by its handle.
    * @deprecated Use `collection` instead
@@ -4837,6 +5222,8 @@ export type QueryRoot = {
   node?: Maybe<Node>;
   /** Returns the list of nodes with the given IDs. */
   nodes: Array<Maybe<Node>>;
+  /** Fetch a specific `Page` by one of its unique attributes. */
+  page?: Maybe<Page>;
   /**
    * Find a page by its handle.
    * @deprecated Use `page` instead
@@ -4844,6 +5231,8 @@ export type QueryRoot = {
   pageByHandle?: Maybe<Page>;
   /** List of the shop's pages. */
   pages: PageConnection;
+  /** Fetch a specific `Product` by one of its unique attributes. */
+  product?: Maybe<Product>;
   /**
    * Find a product by its handle.
    * @deprecated Use `product` instead
@@ -4884,6 +5273,13 @@ export type QueryRootArticlesArgs = {
 
 
 /** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootBlogArgs = {
+  id?: Maybe<Scalars['ID']>;
+  handle?: Maybe<Scalars['String']>;
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
 export type QueryRootBlogByHandleArgs = {
   handle: Scalars['String'];
 };
@@ -4898,6 +5294,19 @@ export type QueryRootBlogsArgs = {
   reverse?: Maybe<Scalars['Boolean']>;
   sortKey?: Maybe<BlogSortKeys>;
   query?: Maybe<Scalars['String']>;
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootCartArgs = {
+  id: Scalars['ID'];
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootCollectionArgs = {
+  id?: Maybe<Scalars['ID']>;
+  handle?: Maybe<Scalars['String']>;
 };
 
 
@@ -4950,6 +5359,13 @@ export type QueryRootNodesArgs = {
 
 
 /** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootPageArgs = {
+  id?: Maybe<Scalars['ID']>;
+  handle?: Maybe<Scalars['String']>;
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
 export type QueryRootPageByHandleArgs = {
   handle: Scalars['String'];
 };
@@ -4964,6 +5380,13 @@ export type QueryRootPagesArgs = {
   reverse?: Maybe<Scalars['Boolean']>;
   sortKey?: Maybe<PageSortKeys>;
   query?: Maybe<Scalars['String']>;
+};
+
+
+/** The schema’s entry-point for queries. This acts as the public, top-level API from which all queries must start. */
+export type QueryRootProductArgs = {
+  id?: Maybe<Scalars['ID']>;
+  handle?: Maybe<Scalars['String']>;
 };
 
 
@@ -5697,6 +6120,37 @@ export enum WeightUnit {
   Ounces = 'OUNCES'
 }
 
+export type ProductFragment = (
+  { __typename?: 'Product' }
+  & Pick<Product, 'id' | 'title' | 'handle' | 'descriptionHtml' | 'tags' | 'totalInventory'>
+  & { variants: (
+    { __typename?: 'ProductVariantConnection' }
+    & { edges: Array<(
+      { __typename?: 'ProductVariantEdge' }
+      & { node: (
+        { __typename?: 'ProductVariant' }
+        & Pick<ProductVariant, 'id'>
+        & { priceV2: (
+          { __typename?: 'MoneyV2' }
+          & Pick<MoneyV2, 'amount'>
+        ) }
+      ) }
+    )> }
+  ), images: (
+    { __typename?: 'ImageConnection' }
+    & { edges: Array<(
+      { __typename?: 'ImageEdge' }
+      & { node: (
+        { __typename?: 'Image' }
+        & Pick<Image, 'transformedSrc' | 'altText' | 'width' | 'height'>
+      ) }
+    )> }
+  ), authors?: Maybe<(
+    { __typename?: 'Metafield' }
+    & Pick<Metafield, 'value'>
+  )> }
+);
+
 export type ProductConnectionFragment = (
   { __typename?: 'ProductConnection' }
   & { pageInfo: (
@@ -5707,13 +6161,20 @@ export type ProductConnectionFragment = (
     & Pick<ProductEdge, 'cursor'>
     & { node: (
       { __typename?: 'Product' }
-      & Pick<Product, 'id' | 'title' | 'vendor' | 'handle' | 'tags'>
-      & { priceRange: (
-        { __typename?: 'ProductPriceRange' }
-        & { minVariantPrice: (
-          { __typename?: 'MoneyV2' }
-          & Pick<MoneyV2, 'amount' | 'currencyCode'>
-        ) }
+      & Pick<Product, 'id' | 'title' | 'handle' | 'tags'>
+      & { variants: (
+        { __typename?: 'ProductVariantConnection' }
+        & { edges: Array<(
+          { __typename?: 'ProductVariantEdge' }
+          & { node: (
+            { __typename?: 'ProductVariant' }
+            & Pick<ProductVariant, 'id'>
+            & { priceV2: (
+              { __typename?: 'MoneyV2' }
+              & Pick<MoneyV2, 'amount'>
+            ) }
+          ) }
+        )> }
       ), images: (
         { __typename?: 'ImageConnection' }
         & { edges: Array<(
@@ -5772,21 +6233,39 @@ export type GetCollectionProductsQuery = (
   ) }
 );
 
-export type ProductTagsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProductTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductTagsQuery = (
+export type GetProductTagsQuery = (
   { __typename?: 'QueryRoot' }
-  & { productTags: (
-    { __typename?: 'StringConnection' }
-    & { edges: Array<(
-      { __typename?: 'StringEdge' }
-      & Pick<StringEdge, 'node'>
-    )> }
+  & { shop: (
+    { __typename?: 'Shop' }
+    & { productTags: (
+      { __typename?: 'StringConnection' }
+      & { edges: Array<(
+        { __typename?: 'StringEdge' }
+        & Pick<StringEdge, 'node'>
+      )> }
+    ) }
   ) }
 );
 
-export const ProductConnectionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"productConnection"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasPreviousPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"vendor"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"priceRange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"minVariantPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transformedSrc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"maxWidth"},"value":{"kind":"IntValue","value":"480"}}]},{"kind":"Field","name":{"kind":"Name","value":"altText"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"authors"},"name":{"kind":"Name","value":"metafield"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"namespace"},"value":{"kind":"StringValue","value":"bearbookshop","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"key"},"value":{"kind":"StringValue","value":"authors","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]}}]}}]} as unknown as DocumentNode<ProductConnectionFragment, unknown>;
+export type GetProductByHandleQueryVariables = Exact<{
+  handle: Scalars['String'];
+}>;
+
+
+export type GetProductByHandleQuery = (
+  { __typename?: 'QueryRoot' }
+  & { product?: Maybe<(
+    { __typename?: 'Product' }
+    & ProductFragment
+  )> }
+);
+
+export const ProductFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"product"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionHtml"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"priceV2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transformedSrc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"maxWidth"},"value":{"kind":"IntValue","value":"480"}}]},{"kind":"Field","name":{"kind":"Name","value":"altText"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"authors"},"name":{"kind":"Name","value":"metafield"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"namespace"},"value":{"kind":"StringValue","value":"bearbookshop","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"key"},"value":{"kind":"StringValue","value":"authors","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"totalInventory"}}]}}]} as unknown as DocumentNode<ProductFragment, unknown>;
+export const ProductConnectionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"productConnection"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasPreviousPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"priceV2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transformedSrc"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"maxWidth"},"value":{"kind":"IntValue","value":"480"}}]},{"kind":"Field","name":{"kind":"Name","value":"altText"}},{"kind":"Field","name":{"kind":"Name","value":"width"}},{"kind":"Field","name":{"kind":"Name","value":"height"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"authors"},"name":{"kind":"Name","value":"metafield"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"namespace"},"value":{"kind":"StringValue","value":"bearbookshop","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"key"},"value":{"kind":"StringValue","value":"authors","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]}}]}}]} as unknown as DocumentNode<ProductConnectionFragment, unknown>;
 export const GetAllProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllProducts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sortKey"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductSortKeys"}},"defaultValue":{"kind":"EnumValue","value":"RELEVANCE"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sortKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"productConnection"}}]}}]}},...ProductConnectionFragmentDoc.definitions]} as unknown as DocumentNode<GetAllProductsQuery, GetAllProductsQueryVariables>;
 export const GetCollectionProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCollectionProducts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sortKey"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ProductCollectionSortKeys"}},"defaultValue":{"kind":"EnumValue","value":"RELEVANCE"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sortKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"productConnection"}}]}}]}}]}}]}}]}},...ProductConnectionFragmentDoc.definitions]} as unknown as DocumentNode<GetCollectionProductsQuery, GetCollectionProductsQueryVariables>;
-export const ProductTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProductTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productTags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"250"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"}}]}}]}}]}}]} as unknown as DocumentNode<ProductTagsQuery, ProductTagsQueryVariables>;
+export const GetProductTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"productTags"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"250"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetProductTagsQuery, GetProductTagsQueryVariables>;
+export const GetProductByHandleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductByHandle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"handle"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"handle"},"value":{"kind":"Variable","name":{"kind":"Name","value":"handle"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"product"}}]}}]}},...ProductFragmentDoc.definitions]} as unknown as DocumentNode<GetProductByHandleQuery, GetProductByHandleQueryVariables>;

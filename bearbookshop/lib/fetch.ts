@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
+import fetch from 'node-fetch'
 
 export const requestWithHeaders = (
   api: string,

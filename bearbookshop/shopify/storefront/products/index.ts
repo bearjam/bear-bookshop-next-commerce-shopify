@@ -1,27 +1,31 @@
+import { pipe } from 'fp-ts/lib/function'
 import { print } from 'graphql'
 import { useMemo } from 'react'
 import useSWR, { useSWRInfinite } from 'swr'
 import { PER_PAGE } from '~/lib/const'
+import { storefrontFetch } from '../../fetch'
 import {
-  GetAllProductsDocument,
   GetAllProductsQuery,
   GetAllProductsQueryVariables,
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables,
-  ProductTagsQuery,
+  GetProductByHandleDocument,
+  GetProductByHandleQuery,
+  GetProductByHandleQueryVariables,
+  GetProductTagsQuery,
 } from '../documents'
-import storefrontFetch from '../fetch'
-import fetch from '../fetch'
 import {
   getAllProductsQuery,
   getCollectionProductsQuery,
-  productTagsQuery,
+  getProductByHandle,
+  getProductTagsQuery,
 } from './queries'
-import getSearchVars, { queryToStaticPropsGetter } from './util'
+import { queryToStaticPropsGetter } from './util'
 
 export const getProductTags = async () =>
-  (await fetch<ProductTagsQuery, {}>(productTagsQuery)).productTags.edges.map(
-    (x) => x.node
+  pipe(
+    await storefrontFetch<GetProductTagsQuery, {}>(getProductTagsQuery),
+    (xs) => xs.shop.productTags.edges.map((x) => x.node)
   )
 
 type ProductsQueryInput = {
@@ -39,13 +43,17 @@ export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
   const query = useMemo(() => {
     let query = ''
     if (search) {
-      query += `title:${search}*`
+      query += search
     }
+
     if (tags && tags.length > 0) {
       query +=
         `${search ? ' AND ' : ''}` +
         tags.map((tag) => `tag:${tag}`).join(' AND ')
     }
+
+    console.log(query)
+
     return query
   }, [search, tags])
 
@@ -60,3 +68,12 @@ export const getHomeProps = queryToStaticPropsGetter<
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables
 >(getCollectionProductsQuery, { query: 'title:home', first: 3 })
+
+export const useProductByHandle = (handle: string) => {
+  const fetch = (handle: string) =>
+    storefrontFetch<GetProductByHandleQuery, GetProductByHandleQueryVariables>(
+      getProductByHandle,
+      { handle }
+    )
+  return useSWR<GetProductByHandleQuery>(handle, fetch)
+}

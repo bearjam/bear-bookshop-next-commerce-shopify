@@ -1,19 +1,12 @@
-import { useAddItem, useCart } from '@framework/cart'
+import { useAddItem } from '@framework/cart'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { FC, forwardRef } from 'react'
+import React from 'react'
 import { styled } from 'stitches.config'
 import tw from 'twin.macro'
 import { Product } from '~/types'
 import { Button } from '../inputs'
 import { Flex } from '../layout/flex'
-
-export const ProductList = styled(Flex, {
-  defaultVariants: {
-    center: true,
-    wrap: true,
-  },
-})
 
 type ProductListItemProps = {
   product: Product
@@ -30,16 +23,29 @@ const Title = styled('div', {})
 
 const ButtonContainer = styled('div', {})
 
-export const ProductListItem = ({ product }: ProductListItemProps) => {
-  const { handle, title, id } = product
+const ProductListItem = ({ product }: ProductListItemProps) => {
+  const { handle, title } = product
+
+  const variant = product.variants.edges[0].node
+  const price = Number(variant.priceV2.amount).toFixed(2)
+
   const image = product.images.edges[0].node
   const { altText, transformedSrc: imageSrc } = image
-  const price = Number(product.priceRange.minVariantPrice.amount).toFixed(2)
+
   const addCartItem = useAddItem()
-  const addProduct = () => void addCartItem({ variantId: id })
+  const addProduct = async () => {
+    try {
+      await addCartItem({
+        variantId: String(variant.id),
+        productId: String(product.id),
+      })
+    } catch (e) {
+      console.log({ e })
+    }
+  }
   return (
     <Li>
-      <Link href={`/shop/products/${handle}`}>
+      <Link href={`/shop/product/${handle}`}>
         <a>
           <Flex center>
             {imageSrc ? (
@@ -63,3 +69,5 @@ export const ProductListItem = ({ product }: ProductListItemProps) => {
     </Li>
   )
 }
+
+export default ProductListItem

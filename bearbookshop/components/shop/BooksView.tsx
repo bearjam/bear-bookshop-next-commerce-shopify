@@ -1,5 +1,6 @@
 import React from 'react'
-import { Product, ProductEdge } from '~/shopify/documents'
+import { ProductEdge } from '~/shopify/storefront/documents'
+import { Product } from '~/types'
 import BookCard from '../BookCard'
 import { Flex } from '../layout/flex'
 

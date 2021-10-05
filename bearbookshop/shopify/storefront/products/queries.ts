@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request'
-import { productConnectionFragment } from './fragments'
+import { productConnectionFragment, productFragment } from './fragments'
 
 export const getAllProductsQuery = gql`
   query getAllProducts(
@@ -36,14 +36,26 @@ export const getCollectionProductsQuery = gql`
   ${productConnectionFragment}
 `
 
-export const productTagsQuery = gql`
-  query ProductTags {
-    productTags(first: 250) {
-      edges {
-        node
+export const getProductTagsQuery = gql`
+  query getProductTags {
+    shop {
+      productTags(first: 250) {
+        edges {
+          node
+        }
       }
     }
   }
+`
+
+export const getProductByHandle = gql`
+  query getProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...product
+    }
+  }
+
+  ${productFragment}
 `
 
 // export const createMetafieldStorefrontVisibilityMutation = gql`
