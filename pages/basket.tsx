@@ -1,94 +1,80 @@
-import { LineItem } from '@commerce/types/cart'
 import { useCart, useRemoveItem, useUpdateItem } from '@framework/cart'
-import { Cart } from '@framework/types/cart'
+import { Cart, LineItem } from '@framework/types/cart'
 import { AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { OpacityPresence, Spinner } from '~/components'
 import { ButtonLink, IncrementField } from '~/components/inputs'
+import { useProductByHandle } from '~/shopify/storefront/products'
 import css from './basket.module.css'
 
 const LineItemRow = ({ item }: { item: LineItem }) => {
-  // const [, dispatch] = useBasket()
-  // const variables: StockCountByIsbnQueryVariables = useMemo(
-  //   () => ({
-  //     isbn: product.isbn,
-  //   }),
-  //   [product]
-  // )
-
-  // const { data: stockCountQuery } = useSWR<StockCountByIsbnQuery>(
-  //   [print(StockCountByIsbnDocument), variables],
-  //   fetcherGQL
-  // )
-
-  // const stockCount = item.
-
-  console.log({ item })
+  if (!item.variant) throw new Error('No item variant')
+  const [removing, setRemoving] = useState(false)
+  const [quantity, setQuantity] = useState<number>(item.quantity)
+  const { data } = useProductByHandle(item.path)
   const removeItem = useRemoveItem()
+  const updateItem = useUpdateItem({ item })
+
+  const inStock = data?.product?.totalInventory ?? 0
+
+  const handleChange = async (value: number) => {
+    if (value > inStock || value < 0) return
+    setQuantity(value)
+    await updateItem({ quantity: value })
+  }
+
+  const handleRemove = async () => {
+    setRemoving(true)
+    try {
+      await removeItem(item)
+    } catch (error) {
+      setRemoving(false)
+    }
+  }
+
+  useEffect(() => {
+    if (item.quantity !== Number(quantity)) {
+      setQuantity(item.quantity)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.quantity])
+
+  // maybe opacity when removing
 
   return (
     <tr key={item.id}>
       <td>
-        {item.variant.image ? (
+        {!data ? (
+          <Spinner />
+        ) : (
           <div className="relative h-20">
             <Image
-              src={item.variant.image.url}
+              src={data.product?.images.edges[0].node.transformedSrc}
               alt="book cover"
               layout="fill"
             />
           </div>
-        ) : null}
+        )}
       </td>
       <td className="pl-4">{item.name}</td>
       <td>
         <IncrementField
-          value={item.quantity}
-          decrement={
-            () => {}
-            // void dispatch({
-            //   type: 'UPDATE_QUANTITY',
-            //   payload: {
-            //     slug: product.slug,
-            //     quantity: quantity - 1,
-            //   },
-            // })
-          }
-          increment={
-            () => {}
-            // void dispatch({
-            //   type: 'UPDATE_QUANTITY',
-            //   payload: {
-            //     slug: product.slug,
-            //     quantity: quantity + 1 <= stockCount ? quantity + 1 : quantity,
-            //   },
-            // })
-          }
+          value={quantity}
+          decrement={() => handleChange(quantity - 1)}
+          increment={() => handleChange(quantity + 1)}
         />
       </td>
       <td>£{(item.variant.price * item.quantity).toFixed(2)}</td>
       <td>
-        <button
-          onClick={
-            () => void removeItem({ id: item.id })
-
-            // dispatch({
-            //   type: 'REMOVE_PRODUCT',
-            //   payload: product.slug,
-            // })
-          }
-        >
-          x
-        </button>
+        <button onClick={handleRemove}>x</button>
       </td>
     </tr>
   )
 }
 
 const BasketPageWithData = ({ cart }: { cart: Cart }) => {
-  console.log({ cart })
-
   return (
     <OpacityPresence>
       <h1>Basket</h1>
@@ -119,10 +105,6 @@ const BasketPageWithData = ({ cart }: { cart: Cart }) => {
           </tr>
         </tfoot>
       </table>
-      <div>
-        <h2>tmp</h2>
-        <pre>{JSON.stringify({ cart }, null, 2)}</pre>
-      </div>
       <div className={css.button}>
         <ButtonLink href="/api/checkout">Checkout</ButtonLink>
       </div>
@@ -132,8 +114,6 @@ const BasketPageWithData = ({ cart }: { cart: Cart }) => {
 
 const BasketPage = () => {
   const { data, isLoading, error } = useCart()
-
-  console.log({ error })
 
   return (
     <div className={css.root}>

@@ -59,6 +59,7 @@ export const getProductByHandle = gql`
 `
 
 // export const createMetafieldStorefrontVisibilityMutation = gql`
+
 //   mutation MetafieldStorefrontVisibility(
 //     $input: MetafieldStorefrontVisibilityInput!
 //   ) {

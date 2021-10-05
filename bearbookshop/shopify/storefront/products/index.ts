@@ -1,5 +1,4 @@
 import { pipe } from 'fp-ts/lib/function'
-import { print } from 'graphql'
 import { useMemo } from 'react'
 import useSWR, { useSWRInfinite } from 'swr'
 import { PER_PAGE } from '~/lib/const'
@@ -9,7 +8,6 @@ import {
   GetAllProductsQueryVariables,
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables,
-  GetProductByHandleDocument,
   GetProductByHandleQuery,
   GetProductByHandleQueryVariables,
   GetProductTagsQuery,
