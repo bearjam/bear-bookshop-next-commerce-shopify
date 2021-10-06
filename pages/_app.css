@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --text-secondary: '#fefefe';
+  --text-secondary: #fefefe;
 }
 
 h1 {
