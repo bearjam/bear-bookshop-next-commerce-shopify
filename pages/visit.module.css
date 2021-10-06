@@ -1,0 +1,46 @@
+.root {
+  @apply max-w-3xl mx-auto;
+  @apply px-4;
+}
+
+.root p > a {
+  @apply underline;
+}
+
+.root span {
+  @apply font-bold;
+}
+
+.root h2 {
+  @apply mt-6;
+}
+
+.root p {
+  @apply mt-3;
+}
+
+.map {
+  @apply mt-6;
+}
+
+.map img {
+  @apply h-64 object-cover;
+}
+
+.icons {
+  @apply flex justify-between w-40 my-4;
+}
+
+.button {
+  @apply my-8;
+}
+
+@screen md {
+  .find {
+    @apply flex;
+  }
+  .find div:first-child > p {
+    max-width: 34rem;
+    @apply mr-10;
+  }
+}

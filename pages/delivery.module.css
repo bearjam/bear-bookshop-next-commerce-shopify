@@ -1,0 +1,12 @@
+.root {
+  @apply max-w-3xl mx-auto;
+  @apply px-4;
+}
+
+.root h3 {
+  @apply mt-8;
+}
+
+.root a {
+  @apply underline;
+}

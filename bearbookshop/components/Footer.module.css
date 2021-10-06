@@ -31,7 +31,7 @@
 }
 
 .root main {
-  @apply px-6 max-w-5xl mx-auto mt-3;
+  @apply px-6 max-w-5xl mx-auto mt-8;
 }
 
 .icons {
@@ -86,6 +86,12 @@
 }
 @screen lg {
   .nav {
-    @apply flex justify-between;
+    @apply flex justify-start;
+  }
+  .nav > div {
+    @apply w-80;
+  }
+  .nav > div:first-of-type {
+    @apply mr-20;
   }
 }

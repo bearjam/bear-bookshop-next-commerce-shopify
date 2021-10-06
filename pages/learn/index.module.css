@@ -1,0 +1,41 @@
+.root {
+  @apply max-w-4xl mx-auto;
+  @apply px-4;
+}
+
+.four {
+  @apply flex flex-wrap justify-center;
+  @apply my-10;
+}
+
+.four > div > svg {
+  margin: 0 auto;
+}
+
+.four p {
+  @apply mb-8 mt-4 text-sm;
+}
+
+.support p {
+  @apply my-6;
+}
+
+.four > div {
+  @apply max-w-sm;
+}
+
+.squares {
+  @apply flex flex-wrap justify-center;
+  @apply my-10;
+}
+
+@screen sm {
+  .squares {
+    @apply justify-between;
+  }
+}
+@screen lg {
+  .four {
+    @apply justify-between;
+  }
+}

@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 :root {
+  --text-primary: #201f24;
   --text-secondary: #fefefe;
+  --text-tertiary: #f5cf68;
+  --text-quaternary: #113065;
 }
 
 h1 {

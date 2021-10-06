@@ -13,6 +13,7 @@ import {
 import { theme } from 'twin.macro'
 import BearBookshopLogo from './svg/BearBookshopLogo'
 import BasketIndicator from './BasketIndicator'
+import { Flex } from './layout/flex'
 
 const Header = () => {
   const [open, setOpen] = useState(false)
@@ -50,7 +51,6 @@ const Header = () => {
             </Branding>
           </a>
         </Link>
-        <BasketIndicator />
         <AnimatePresence>
           {open && (
             <SmallNav
@@ -106,6 +106,8 @@ const Header = () => {
             }
           </BigNav>
         </AnimateSharedLayout>
+
+        <BasketIndicator />
       </Container>
     </Root>
   )

@@ -34,6 +34,13 @@ module.exports = withCommerceConfig({
         },
     ].filter(Boolean)
   },
+  images: {
+    domains: [
+      'storage.googleapis.com',
+      'bearbookshop.co.uk',
+      'test.bearbookshop.co.uk',
+    ],
+  },
 })
 
 // Don't delete this console log, useful to see the commerce config in Vercel deployments

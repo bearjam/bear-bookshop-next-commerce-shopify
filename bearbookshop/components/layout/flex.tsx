@@ -22,5 +22,16 @@ export const Flex = styled('div', {
         justifyContent: 'space-between',
       },
     },
+    items: {
+      center: {
+        alignItems: 'center',
+      },
+      start: {
+        alignItems: 'flex-start',
+      },
+      end: {
+        alignItems: 'flex-end',
+      },
+    },
   },
 })

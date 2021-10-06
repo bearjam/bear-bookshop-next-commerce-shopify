@@ -1,0 +1,49 @@
+.root {
+  @apply max-w-5xl mx-auto;
+  @apply px-4;
+}
+
+.jenny-portrait {
+  @apply relative mt-6;
+  height: 24rem;
+}
+
+.root p {
+  @apply mt-8;
+}
+
+.root > p:nth-child(5) {
+  @apply font-bold;
+}
+
+.root h2 {
+  @apply mt-6;
+}
+
+.root span {
+  @apply font-bold;
+}
+
+.icons {
+  @apply flex justify-between w-40 my-4;
+}
+
+.root h6 {
+  @apply font-bold font-display my-6;
+}
+
+@screen sm {
+  .jenny-portrait {
+    height: 24rem;
+    @apply object-cover float-right w-1/3;
+    @apply ml-6 mb-2;
+  }
+}
+@screen lg {
+  .contact {
+    @apply flex;
+  }
+  .contact p {
+    @apply mr-20;
+  }
+}

@@ -1,0 +1,39 @@
+.root {
+  @apply max-w-3xl mx-auto;
+  /* @apply px-4; */
+}
+
+.image {
+  @apply w-full h-48;
+  position: relative;
+}
+
+.text {
+  @apply px-4;
+}
+
+.text > h2 {
+  @apply mt-4;
+}
+
+.text > h3 {
+  @apply my-2 text-quaternary;
+}
+
+.text > h4 {
+  @apply text-quaternary;
+}
+
+.shop {
+  @apply mt-6;
+}
+
+.shop p {
+  @apply mt-3 mb-6;
+}
+
+@screen sm {
+  .image {
+    @apply h-64;
+  }
+}

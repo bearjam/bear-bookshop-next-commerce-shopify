@@ -79,14 +79,6 @@ const Footer = () => {
               <a href="/terms-and-conditions">Terms &amp; Conditions</a>
             </div>
           </div>
-          <div>
-            <h4>My account</h4>
-            <div>
-              <Link href="/basket">
-                <a>My basket</a>
-              </Link>
-            </div>
-          </div>
         </div>
         <div className={css.copyright}>
           <a href="https://bearjam.dev">Bearjam Web Development, 2020</a>

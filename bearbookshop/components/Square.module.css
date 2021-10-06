@@ -1,0 +1,33 @@
+/* .square {
+  @apply flex flex-col items-center m-3 w-full;
+} */
+
+.square {
+  border-color: #113065;
+  @apply rounded-lg border-4 bg-secondary;
+  @apply text-center py-4 w-64;
+  @apply shadow-lg m-3;
+}
+
+.square h1,
+.square h2 {
+  @apply font-extrabold text-quaternary;
+}
+
+.square h1 {
+  @apply text-5xl;
+}
+
+.square h2 {
+  @apply align-top;
+}
+
+.square h4 {
+  @apply my-3;
+}
+
+@screen sm {
+  .square {
+    /* @apply w-1/3; */
+  }
+}

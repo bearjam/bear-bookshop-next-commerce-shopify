@@ -45,7 +45,7 @@ export const SmallNav = styled(Nav, {
 export const BigNav = styled(Nav, {
   ...tw`hidden font-display`,
   '@lg': {
-    ...tw`flex`,
+    ...tw`flex mr-8`,
     '& > *:not(:last-child)': tw`mr-6`,
     '& a': tw`relative`,
     '& a > div': {
