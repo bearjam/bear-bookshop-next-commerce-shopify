@@ -1,9 +1,9 @@
-import type { AppProps } from 'next/app'
-import { FC, Fragment, useEffect } from 'react'
-import './_app.css'
-import tw from 'twin.macro'
-import { Header, Footer } from '~/components'
 import { CommerceProvider } from '@framework'
+import type { AppProps } from 'next/app'
+import { FC, useEffect } from 'react'
+import tw from 'twin.macro'
+import { Footer, Header } from '~/components'
+import './_app.css'
 const Noop: FC = ({ children }) => <>{children}</>
 
 const Main = tw.div`pt-20`

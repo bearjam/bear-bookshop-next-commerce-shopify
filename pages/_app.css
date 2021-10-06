@@ -1,8 +1,10 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
+
+:root {
+  --text-secondary: '#fefefe';
+}
 
 h1 {
   @apply text-4xl text-primary font-display font-bold tracking-wide;
@@ -26,7 +28,7 @@ p {
 }
 
 ul {
-  list-style: url("../public/star.svg");
+  list-style: url('../public/star.svg');
   list-style-position: inside;
   @apply font-body mt-3 text-sm;
 }

@@ -19,8 +19,11 @@ export const Container = styled(motion.div, {
 })
 
 const _Hamburger = styled(Hamburger, {
-  ...tw`z-30`,
+  ...tw`z-30 text-lg`,
   '@lg': tw`hidden`,
+  '& svg': {
+    strokeWidth: 2.5,
+  },
 })
 
 export { _Hamburger as Hamburger }

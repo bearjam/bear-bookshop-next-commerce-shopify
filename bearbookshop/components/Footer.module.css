@@ -1,0 +1,91 @@
+.root {
+  @apply bg-primary mt-4;
+}
+
+.wave {
+  position: relative;
+  height: 6rem;
+  background: url("/star-pattern.svg");
+  @apply bg-primary;
+  background-repeat: repeat;
+  background-position-x: 75%;
+  background-position-y: -5%;
+  transform: translateY(1px);
+}
+
+.wave svg {
+  transform: scaleX(-1) scaleY(-1.1);
+  z-index: 1;
+  position: absolute;
+  fill: white;
+}
+
+.root h3,
+.root h4,
+.root p {
+  @apply text-secondary;
+}
+
+.root p {
+  @apply text-sm my-2;
+}
+
+.root main {
+  @apply px-6 max-w-3xl mx-auto mt-3;
+}
+
+.icons {
+  @apply flex justify-between w-40 my-4;
+}
+
+.icons > a > svg {
+  fill: white;
+}
+
+.root main span {
+  @apply font-bold;
+}
+
+.root main > hr {
+  @apply mt-6;
+}
+
+.nav h4 {
+  @apply mt-4 mb-1;
+}
+
+.nav a,
+.copyright a {
+  @apply font-body text-secondary text-sm;
+  @apply flex my-1;
+}
+
+.copyright {
+  @apply mt-8 flex justify-center;
+}
+
+.copyright > a {
+  @apply text-xs;
+}
+
+@screen md {
+  .social {
+    @apply pt-8;
+  }
+  .root h3 {
+    @apply mt-4;
+  }
+  .social,
+  .info {
+    @apply flex flex-wrap;
+  }
+  .social > div:first-child,
+  .info > div:first-child {
+    @apply max-w-xs mr-20;
+  }
+}
+@screen lg {
+  .nav {
+    @apply flex justify-between;
+  }
+}
