@@ -13,7 +13,7 @@ const BasketIndicator = ({
 }: Props & React.HTMLAttributes<HTMLDivElement>) => {
   const { data } = useCart()
   const totalItems =
-    data?.lineItems.reduce((acc, v) => acc + v.quantity, 0) ?? 0
+    data?.lineItems.reduce((acc: number, v) => acc + v.quantity, 0) ?? 0
   return (
     <div className={clsx(css.root, className)} {...props}>
       <Link href="/basket">
