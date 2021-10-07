@@ -72,7 +72,7 @@ const ProductPageView = ({ product }: Props) => {
         </div>
       </div>
       <div className={css.lower}>
-        <p>{description}</p>
+        <div dangerouslySetInnerHTML={{ __html: description }} />
         <div className={css.quantity}>
           <button onClick={decrement}>-</button>
           <span>{quantity}</span>
