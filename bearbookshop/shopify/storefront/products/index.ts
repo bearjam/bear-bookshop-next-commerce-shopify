@@ -29,6 +29,7 @@ export const getProductTags = async () =>
 type ProductsQueryInput = {
   search?: string
   tags?: string[]
+  type?: string
 }
 
 const productsFetch = (query: string, first: number, after?: string) =>
@@ -37,7 +38,11 @@ const productsFetch = (query: string, first: number, after?: string) =>
     { query, first, after }
   )
 
-export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
+export const useProductsQuery = ({
+  search,
+  tags,
+  type,
+}: ProductsQueryInput = {}) => {
   const query = useMemo(() => {
     let query = ''
     if (search) {
@@ -50,10 +55,14 @@ export const useProductsQuery = ({ search, tags }: ProductsQueryInput = {}) => {
         tags.map((tag) => `tag:${tag}`).join(' AND ')
     }
 
+    if (!!type) {
+      query += ` AND product_type:${type} `
+    }
+
     query += ' AND available_for_sale:true'
 
     return query
-  }, [search, tags])
+  }, [search, tags, type])
 
   return useSWRInfinite<GetAllProductsQuery>((pageIndex, prevData) => {
     const after =

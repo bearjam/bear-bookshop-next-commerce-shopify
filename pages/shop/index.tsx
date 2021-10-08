@@ -1,14 +1,18 @@
-import { ShopIndex } from '~/components/shop'
-import { getProductTags } from '~/shopify/storefront/products'
+import Link from 'next/link'
+import React from 'react'
 
-export const getStaticProps = async () => {
-  const tags = await getProductTags()
-
-  return {
-    props: {
-      tags,
-    },
-  }
+const ShopIndexPage = () => {
+  return (
+    <div>
+      <h2>todo put some links here</h2>
+      <Link href="./books">
+        <a>Books</a>
+      </Link>
+      <Link href="./subscriptions">
+        <a>Subscriptions</a>
+      </Link>
+    </div>
+  )
 }
 
-export default ShopIndex
+export default ShopIndexPage

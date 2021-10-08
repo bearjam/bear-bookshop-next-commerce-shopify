@@ -1,4 +1,3 @@
-import { CommerceProvider } from '@framework'
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React, { useCallback, useMemo } from 'react'
@@ -8,10 +7,10 @@ import * as z from 'zod'
 import { MultiCheckCombobox, TextField } from '~/components/inputs'
 import { useProductsQuery } from '~/shopify/storefront/products'
 import { Product } from '~/types'
+import { ProductList, ProductListItem } from '.'
 import OpacityPresence from '../OpacityPresence'
 import Spinner from '../Spinner'
-import { ProductList, ProductListItem } from '.'
-import css from './ShopIndex.module.css'
+import css from './BooksIndex.module.css'
 
 type Props = {
   tags: string[]
@@ -34,6 +33,7 @@ const ShopIndex = ({ tags: allTags }: Props) => {
   const { data, error, setSize } = useProductsQuery({
     search: q,
     tags,
+    type: 'Book',
   })
 
   const loading = !data && !error

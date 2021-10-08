@@ -1,4 +1,4 @@
-export { default as ShopIndex } from './ShopIndex'
+export { default as BooksIndex } from './BooksIndex'
 export { default as BooksViews } from './BooksView'
 export { default as ProductList } from './ProductList'
 export { default as ProductListItem } from './ProductListItem'
