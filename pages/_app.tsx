@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { FC, useEffect } from 'react'
 import tw from 'twin.macro'
 import { Footer, Header } from '~/components'
+import { CartProvider } from '~/shopify/storefront/cart'
 import './_app.css'
 const Noop: FC = ({ children }) => <>{children}</>
 
@@ -15,7 +16,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     document.body.classList?.remove('loading')
   }, [])
   return (
-    <CommerceProvider>
+    <CartProvider>
       {/* <Head /> */}
       <Header />
       <Main>
@@ -24,7 +25,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </Layout>
       </Main>
       <Footer />
-    </CommerceProvider>
+    </CartProvider>
   )
 }
 

@@ -3,7 +3,7 @@ import { ProductFragment } from '~/shopify/storefront/documents'
 import css from './ProductPageView.module.css'
 import Image from 'next/image'
 import { Button } from '../inputs'
-import { useAddItem } from '@framework/cart'
+import { useCart } from '~/shopify/storefront/cart'
 
 type Props = {
   product: ProductFragment
@@ -33,12 +33,12 @@ const ProductPageView = ({ product }: Props) => {
     setQuantity((previous) => (quantity > 1 ? previous - 1 : previous))
   }
 
-  const addCartItem = useAddItem()
+  const { addItem } = useCart()
+
   const addProduct = async () => {
     try {
-      await addCartItem({
-        variantId: String(variant.id),
-        productId: String(product.id),
+      await addItem({
+        merchandiseId: String(variant.id),
         quantity,
       })
     } catch (e) {

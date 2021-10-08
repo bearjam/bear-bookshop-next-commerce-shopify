@@ -1,9 +1,9 @@
-import { useAddItem } from '@framework/cart'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { styled } from 'stitches.config'
 import tw from 'twin.macro'
+import { useCart } from '~/shopify/storefront/cart'
 import { Product } from '~/types'
 import { Button } from '../inputs'
 import { Flex } from '../layout/flex'
@@ -32,13 +32,10 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   const image = product.images.edges[0].node
   const { altText, transformedSrc: imageSrc } = image
 
-  const addCartItem = useAddItem()
+  const { addItem } = useCart()
   const addProduct = async () => {
     try {
-      await addCartItem({
-        variantId: String(variant.id),
-        productId: String(product.id),
-      })
+      await addItem({ merchandiseId: String(variant.id), quantity: 1 })
     } catch (e) {
       console.log({ e })
     }

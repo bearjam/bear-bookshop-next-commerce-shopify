@@ -1,38 +1,40 @@
-import { useCart, useRemoveItem, useUpdateItem } from '@framework/cart'
-import { Cart, LineItem } from '@framework/types/cart'
 import { AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { OpacityPresence, Spinner } from '~/components'
+import CheckoutNoteForm from '~/components/CheckoutNoteForm'
 import { ButtonLink, IncrementField } from '~/components/inputs'
-import { useProductByHandle } from '~/shopify/storefront/products'
+import { useCart } from '~/shopify/storefront/cart'
+import { CartDetailsFragment } from '~/shopify/storefront/documents'
 import css from './basket.module.css'
 
+type LineItem = CartDetailsFragment['lines']['edges'][0]['node']
+
 const LineItemRow = ({ item }: { item: LineItem }) => {
-  if (!item.variant) throw new Error('No item variant')
   const [removing, setRemoving] = useState(false)
   const [quantity, setQuantity] = useState<number>(item.quantity)
-  const { data } = useProductByHandle(item.path)
-  const removeItem = useRemoveItem()
-  const updateItem = useUpdateItem({ item })
+  const { removeItem, updateItem } = useCart()
 
-  const inStock = data?.product?.totalInventory ?? 0
+  const inStock = item.merchandise.product.totalInventory ?? 0
 
   const handleChange = async (value: number) => {
     if (value > inStock || value < 0) return
     setQuantity(value)
-    await updateItem({ quantity: value })
+    await updateItem({ id: item.id, quantity: value })
   }
 
   const handleRemove = async () => {
     setRemoving(true)
     try {
-      await removeItem(item)
+      await removeItem(item.id)
     } catch (error) {
+      console.log({ error })
       setRemoving(false)
     }
   }
+
+  useEffect(() => void console.log(removing), [removing])
 
   useEffect(() => {
     if (item.quantity !== Number(quantity)) {
@@ -46,19 +48,15 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
   return (
     <tr key={item.id}>
       <td>
-        {!data ? (
-          <Spinner />
-        ) : (
-          <div className="relative h-20">
-            <Image
-              src={data.product?.images.edges[0].node.transformedSrc}
-              alt="book cover"
-              layout="fill"
-            />
-          </div>
-        )}
+        <div className="relative h-20">
+          <Image
+            src={item.merchandise.image?.transformedSrc}
+            alt="book cover"
+            layout="fill"
+          />
+        </div>
       </td>
-      <td className="pl-4">{item.name}</td>
+      <td className="pl-4">{item.merchandise.product.title}</td>
       <td>
         <IncrementField
           value={quantity}
@@ -66,7 +64,7 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
           increment={() => handleChange(quantity + 1)}
         />
       </td>
-      <td>£{(item.variant.price * item.quantity).toFixed(2)}</td>
+      <td>£{(item.merchandise.priceV2.amount * item.quantity).toFixed(2)}</td>
       <td>
         <button onClick={handleRemove}>x</button>
       </td>
@@ -74,7 +72,7 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
   )
 }
 
-const BasketPageWithData = ({ cart }: { cart: Cart }) => {
+const BasketPageWithData = ({ cart }: { cart: CartDetailsFragment }) => {
   return (
     <OpacityPresence>
       <h1>Basket</h1>
@@ -94,31 +92,34 @@ const BasketPageWithData = ({ cart }: { cart: Cart }) => {
           </tr>
         </thead>
         <tbody>
-          {cart.lineItems.map((lineItem) => (
-            <LineItemRow key={lineItem.id} item={lineItem} />
+          {cart.lines.edges.map(({ node }) => (
+            <LineItemRow key={node.id} item={node} />
           ))}
         </tbody>
         <tfoot>
           <tr>
             <th>Total</th>
-            <td>£{cart.subtotalPrice}</td>
+            <td>£{cart.estimatedCost.subtotalAmount.amount}</td>
           </tr>
         </tfoot>
       </table>
+      <div>
+        <CheckoutNoteForm />
+      </div>
       <div className={css.button}>
-        <ButtonLink href="/api/checkout">Checkout</ButtonLink>
+        <ButtonLink href={cart.checkoutUrl}>Checkout</ButtonLink>
       </div>
     </OpacityPresence>
   )
 }
 
 const BasketPage = () => {
-  const { data, isLoading, error } = useCart()
+  const { cart, loading, error } = useCart()
 
   return (
     <div className={css.root}>
       <AnimatePresence exitBeforeEnter>
-        {isLoading ? (
+        {loading ? (
           <OpacityPresence>
             <Spinner />
           </OpacityPresence>
@@ -127,16 +128,16 @@ const BasketPage = () => {
             <h2>Error</h2>
             <pre>{JSON.stringify(error, null, 2)}</pre>
           </OpacityPresence>
-        ) : !data || data.lineItems.length < 1 ? (
+        ) : !cart || cart.lines.edges.length < 1 ? (
           <OpacityPresence>
             <div className={css.empty}>
               <h4>Your basket is empty!</h4>
               <ButtonLink href="/shop">Back to shop</ButtonLink>
             </div>
           </OpacityPresence>
-        ) : data ? (
+        ) : cart ? (
           <OpacityPresence>
-            <BasketPageWithData cart={data} />
+            <BasketPageWithData cart={cart} />
           </OpacityPresence>
         ) : (
           <OpacityPresence>

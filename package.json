@@ -41,6 +41,7 @@
     "email-validator": "^2.0.4",
     "fp-ts": "^2.11.4",
     "framer-motion": "^4.1.17",
+    "graphql-request": "^3.5.0",
     "gray-matter": "^4.0.2",
     "immutability-helper": "^3.1.1",
     "js-cookie": "^2.2.1",

@@ -1068,10 +1068,13 @@ export enum BulkOperationErrorCode {
    * Review the requested object permissions and execute the query as a normal non-bulk GraphQL request to see more details.
    */
   AccessDenied = 'ACCESS_DENIED',
-  /** Operation resulted in partial or incomplete data due to internal server errors during execution. */
+  /**
+   * The operation resulted in partial or incomplete data due to internal server errors during execution.
+   * These errors might be intermittent, so you can try performing the same query again.
+   */
   InternalServerError = 'INTERNAL_SERVER_ERROR',
   /**
-   * Operation resulted in partial or incomplete data due to query timeouts during execution.
+   * The operation resulted in partial or incomplete data due to query timeouts during execution.
    * In some cases, timeouts can be avoided by modifying your `query` to select fewer fields.
    */
   Timeout = 'TIMEOUT'
@@ -1095,22 +1098,28 @@ export type BulkOperationRunQueryPayload = {
   userErrors: Array<UserError>;
 };
 
-/** Statuses of a bulk operation. */
+/** The valid values for the status of a bulk operation. */
 export enum BulkOperationStatus {
-  /** Operation created. */
-  Created = 'CREATED',
-  /** Operation running. */
-  Running = 'RUNNING',
-  /** Operation completed. */
-  Completed = 'COMPLETED',
-  /** Operation canceling. */
-  Canceling = 'CANCELING',
-  /** Operation canceled. */
+  /** The bulk operation has been canceled. */
   Canceled = 'CANCELED',
-  /** Operation failed. */
+  /**
+   * Cancelation has been initiated on the bulk operation. There may be a short delay from when a cancelation
+   * starts until the operation is actually canceled.
+   */
+  Canceling = 'CANCELING',
+  /** The bulk operation has successfully completed. */
+  Completed = 'COMPLETED',
+  /** The bulk operation has been created. */
+  Created = 'CREATED',
+  /** The bulk operation URL has expired. */
+  Expired = 'EXPIRED',
+  /**
+   * The bulk operation has failed. For information on why the operation failed, use
+   * [BulkOperation.errorCode](https://help.shopify.com/api/admin-graphql/unstable/enums/BulkOperationErrorCode).
+   */
   Failed = 'FAILED',
-  /** Operation URL has expired. */
-  Expired = 'EXPIRED'
+  /** The bulk operation is runnning. */
+  Running = 'RUNNING'
 }
 
 /** Type of a bulk operation. */
@@ -6186,10 +6195,10 @@ export enum DiscountErrorCode {
   MissingArgument = 'MISSING_ARGUMENT',
   /** Exceeded maximum allowed value. */
   ExceededMax = 'EXCEEDED_MAX',
-  /** Cannot have both minimum subtotal and quantity present. */
-  MinimumSubtotalAndQuantityRangeBothPresent = 'MINIMUM_SUBTOTAL_AND_QUANTITY_RANGE_BOTH_PRESENT',
   /** Value is outside allowed range. */
   ValueOutsideRange = 'VALUE_OUTSIDE_RANGE',
+  /** Cannot have both minimum subtotal and quantity present. */
+  MinimumSubtotalAndQuantityRangeBothPresent = 'MINIMUM_SUBTOTAL_AND_QUANTITY_RANGE_BOTH_PRESENT',
   /** Active period overlaps with other automatic discounts. At any given time, only one automatic discount can be active. */
   ActivePeriodOverlap = 'ACTIVE_PERIOD_OVERLAP',
   /** Attribute selection contains conflicting settings. */
@@ -25880,207 +25889,207 @@ export enum WebhookSubscriptionSortKeys {
 
 /** The supported topics for webhook subscriptions. */
 export enum WebhookSubscriptionTopic {
-  /** The webhook topic for `app/uninstalled` events.Occurs whenever a shop has uninstalled the app. Event payloads contain a Shop. */
+  /** The webhook topic for `app/uninstalled` events. Occurs whenever a shop has uninstalled the app. */
   AppUninstalled = 'APP_UNINSTALLED',
-  /** The webhook topic for `carts/create` events.Occurs whenever a cart is created. Event payloads contain a Cart. */
+  /** The webhook topic for `carts/create` events. Occurs whenever a cart is created. Requires the `read_orders` scope. */
   CartsCreate = 'CARTS_CREATE',
-  /** The webhook topic for `carts/update` events.Occurs whenever a cart is updated. Event payloads contain a Cart. */
+  /** The webhook topic for `carts/update` events. Occurs whenever a cart is updated. Requires the `read_orders` scope. */
   CartsUpdate = 'CARTS_UPDATE',
-  /** The webhook topic for `channels/delete` events.Occurs whenever a channel is deleted. Event payloads contain a Channel. */
+  /** The webhook topic for `channels/delete` events. Occurs whenever a channel is deleted. Requires the `read_publications` scope. */
   ChannelsDelete = 'CHANNELS_DELETE',
-  /** The webhook topic for `checkouts/create` events.Occurs whenever a checkout is created. Event payloads contain a Checkout. */
+  /** The webhook topic for `checkouts/create` events. Occurs whenever a checkout is created. Requires the `read_orders` scope. */
   CheckoutsCreate = 'CHECKOUTS_CREATE',
-  /** The webhook topic for `checkouts/delete` events.Occurs whenever a checkout is deleted. Event payloads contain a Checkout. */
+  /** The webhook topic for `checkouts/delete` events. Occurs whenever a checkout is deleted. Requires the `read_orders` scope. */
   CheckoutsDelete = 'CHECKOUTS_DELETE',
-  /** The webhook topic for `checkouts/update` events.Occurs whenever a checkout is updated. Event payloads contain a Checkout. */
+  /** The webhook topic for `checkouts/update` events. Occurs whenever a checkout is updated. Requires the `read_orders` scope. */
   CheckoutsUpdate = 'CHECKOUTS_UPDATE',
-  /** The webhook topic for `customer_payment_methods/create` events.Occurs whenever a customer payment method is created. Event payloads contain a Payments::Vault::Mandate. */
+  /** The webhook topic for `customer_payment_methods/create` events. Occurs whenever a customer payment method is created. Requires the `read_customer_payment_methods` scope. */
   CustomerPaymentMethodsCreate = 'CUSTOMER_PAYMENT_METHODS_CREATE',
-  /** The webhook topic for `customer_payment_methods/update` events.Occurs whenever a customer payment method is updated. Event payloads contain a Payments::Vault::Mandate. */
+  /** The webhook topic for `customer_payment_methods/update` events. Occurs whenever a customer payment method is updated. Requires the `read_customer_payment_methods` scope. */
   CustomerPaymentMethodsUpdate = 'CUSTOMER_PAYMENT_METHODS_UPDATE',
-  /** The webhook topic for `customer_payment_methods/revoke` events.Occurs whenever a customer payment method is revoked. Event payloads contain a Payments::Vault::Mandate. */
+  /** The webhook topic for `customer_payment_methods/revoke` events. Occurs whenever a customer payment method is revoked. Requires the `read_customer_payment_methods` scope. */
   CustomerPaymentMethodsRevoke = 'CUSTOMER_PAYMENT_METHODS_REVOKE',
-  /** The webhook topic for `collection_listings/add` events.Occurs whenever a collection listing is added. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_listings/add` events. Occurs whenever a collection listing is added. Requires the `read_product_listings` scope. */
   CollectionListingsAdd = 'COLLECTION_LISTINGS_ADD',
-  /** The webhook topic for `collection_listings/remove` events.Occurs whenever a collection listing is removed. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_listings/remove` events. Occurs whenever a collection listing is removed. Requires the `read_product_listings` scope. */
   CollectionListingsRemove = 'COLLECTION_LISTINGS_REMOVE',
-  /** The webhook topic for `collection_listings/update` events.Occurs whenever a collection listing is updated. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_listings/update` events. Occurs whenever a collection listing is updated. Requires the `read_product_listings` scope. */
   CollectionListingsUpdate = 'COLLECTION_LISTINGS_UPDATE',
-  /** The webhook topic for `collection_publications/create` events.Occurs whenever a collection publication listing is created. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_publications/create` events. Occurs whenever a collection publication listing is created. Requires the `read_publications` scope. */
   CollectionPublicationsCreate = 'COLLECTION_PUBLICATIONS_CREATE',
-  /** The webhook topic for `collection_publications/delete` events.Occurs whenever a collection publication listing is deleted. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_publications/delete` events. Occurs whenever a collection publication listing is deleted. Requires the `read_publications` scope. */
   CollectionPublicationsDelete = 'COLLECTION_PUBLICATIONS_DELETE',
-  /** The webhook topic for `collection_publications/update` events.Occurs whenever a collection publication listing is updated. Event payloads contain a CollectionPublication. */
+  /** The webhook topic for `collection_publications/update` events. Occurs whenever a collection publication listing is updated. Requires the `read_publications` scope. */
   CollectionPublicationsUpdate = 'COLLECTION_PUBLICATIONS_UPDATE',
-  /** The webhook topic for `collections/create` events.Occurs whenever a collection is created. Event payloads contain a Collection. */
+  /** The webhook topic for `collections/create` events. Occurs whenever a collection is created. Requires the `read_products` scope. */
   CollectionsCreate = 'COLLECTIONS_CREATE',
-  /** The webhook topic for `collections/delete` events.Occurs whenever a collection is deleted. Event payloads contain a Collection. */
+  /** The webhook topic for `collections/delete` events. Occurs whenever a collection is deleted. Requires the `read_products` scope. */
   CollectionsDelete = 'COLLECTIONS_DELETE',
-  /** The webhook topic for `collections/update` events.Occurs whenever a collection is updated, including whenever products are added or removed from the collection. Occurs once if multiple products are added or removed from a collection at the same time. Event payloads contain a Collection. */
+  /** The webhook topic for `collections/update` events. Occurs whenever a collection is updated, including whenever products are added or removed from the collection. Occurs once if multiple products are added or removed from a collection at the same time. Requires the `read_products` scope. */
   CollectionsUpdate = 'COLLECTIONS_UPDATE',
-  /** The webhook topic for `customer_groups/create` events.Occurs whenever a customer saved search is created. Event payloads contain a CustomerSavedSearch. */
+  /** The webhook topic for `customer_groups/create` events. Occurs whenever a customer saved search is created. Requires the `read_customers` scope. */
   CustomerGroupsCreate = 'CUSTOMER_GROUPS_CREATE',
-  /** The webhook topic for `customer_groups/delete` events.Occurs whenever a customer saved search is deleted. Event payloads contain a CustomerSavedSearch. */
+  /** The webhook topic for `customer_groups/delete` events. Occurs whenever a customer saved search is deleted. Requires the `read_customers` scope. */
   CustomerGroupsDelete = 'CUSTOMER_GROUPS_DELETE',
-  /** The webhook topic for `customer_groups/update` events.Occurs whenever a customer saved search is updated. Event payloads contain a CustomerSavedSearch. */
+  /** The webhook topic for `customer_groups/update` events. Occurs whenever a customer saved search is updated. Requires the `read_customers` scope. */
   CustomerGroupsUpdate = 'CUSTOMER_GROUPS_UPDATE',
-  /** The webhook topic for `customers/create` events.Occurs whenever a customer is created. Event payloads contain a Customer. */
+  /** The webhook topic for `customers/create` events. Occurs whenever a customer is created. Requires the `read_customers` scope. */
   CustomersCreate = 'CUSTOMERS_CREATE',
-  /** The webhook topic for `customers/delete` events.Occurs whenever a customer is deleted. Event payloads contain a Customer. */
+  /** The webhook topic for `customers/delete` events. Occurs whenever a customer is deleted. Requires the `read_customers` scope. */
   CustomersDelete = 'CUSTOMERS_DELETE',
-  /** The webhook topic for `customers/disable` events.Occurs whenever a customer account is disabled. Event payloads contain a Customer. */
+  /** The webhook topic for `customers/disable` events. Occurs whenever a customer account is disabled. Requires the `read_customers` scope. */
   CustomersDisable = 'CUSTOMERS_DISABLE',
-  /** The webhook topic for `customers/enable` events.Occurs whenever a customer account is enabled. Event payloads contain a Customer. */
+  /** The webhook topic for `customers/enable` events. Occurs whenever a customer account is enabled. Requires the `read_customers` scope. */
   CustomersEnable = 'CUSTOMERS_ENABLE',
-  /** The webhook topic for `customers/update` events.Occurs whenever a customer is updated. Event payloads contain a Customer. */
+  /** The webhook topic for `customers/update` events. Occurs whenever a customer is updated. Requires the `read_customers` scope. */
   CustomersUpdate = 'CUSTOMERS_UPDATE',
-  /** The webhook topic for `customers_marketing_consent/update` events.Occurs whenever a customer's marketing consent is updated. Event payloads contain a Customer. */
+  /** The webhook topic for `customers_marketing_consent/update` events. Occurs whenever a customer's marketing consent is updated. Requires the `read_customers` scope. */
   CustomersMarketingConsentUpdate = 'CUSTOMERS_MARKETING_CONSENT_UPDATE',
-  /** The webhook topic for `disputes/create` events.Occurs whenever a dispute is created. Event payloads contain a Payments::Dispute. */
+  /** The webhook topic for `disputes/create` events. Occurs whenever a dispute is created. Requires the `read_shopify_payments_disputes` scope. */
   DisputesCreate = 'DISPUTES_CREATE',
-  /** The webhook topic for `disputes/update` events.Occurs whenever a dispute is updated. Event payloads contain a Payments::Dispute. */
+  /** The webhook topic for `disputes/update` events. Occurs whenever a dispute is updated. Requires the `read_shopify_payments_disputes` scope. */
   DisputesUpdate = 'DISPUTES_UPDATE',
-  /** The webhook topic for `draft_orders/create` events.Occurs whenever a draft order is created. Event payloads contain a DraftOrder. */
+  /** The webhook topic for `draft_orders/create` events. Occurs whenever a draft order is created. Requires the `read_draft_orders` scope. */
   DraftOrdersCreate = 'DRAFT_ORDERS_CREATE',
-  /** The webhook topic for `draft_orders/delete` events.Occurs whenever a draft order is deleted. Event payloads contain a DraftOrder. */
+  /** The webhook topic for `draft_orders/delete` events. Occurs whenever a draft order is deleted. Requires the `read_draft_orders` scope. */
   DraftOrdersDelete = 'DRAFT_ORDERS_DELETE',
-  /** The webhook topic for `draft_orders/update` events.Occurs whenever a draft order is updated. Event payloads contain a DraftOrder. */
+  /** The webhook topic for `draft_orders/update` events. Occurs whenever a draft order is updated. Requires the `read_draft_orders` scope. */
   DraftOrdersUpdate = 'DRAFT_ORDERS_UPDATE',
-  /** The webhook topic for `fulfillment_events/create` events.Occurs whenever a fulfillment event is created. Event payloads contain a FulfillmentEvent. */
+  /** The webhook topic for `fulfillment_events/create` events. Occurs whenever a fulfillment event is created. Requires the `read_fulfillments` scope. */
   FulfillmentEventsCreate = 'FULFILLMENT_EVENTS_CREATE',
-  /** The webhook topic for `fulfillment_events/delete` events.Occurs whenever a fulfillment event is deleted. Event payloads contain a FulfillmentEvent. */
+  /** The webhook topic for `fulfillment_events/delete` events. Occurs whenever a fulfillment event is deleted. Requires the `read_fulfillments` scope. */
   FulfillmentEventsDelete = 'FULFILLMENT_EVENTS_DELETE',
-  /** The webhook topic for `fulfillments/create` events.Occurs whenever a fulfillment is created. Event payloads contain a Fulfillment. */
+  /** The webhook topic for `fulfillments/create` events. Occurs whenever a fulfillment is created. Requires the `read_fulfillments` scope. */
   FulfillmentsCreate = 'FULFILLMENTS_CREATE',
-  /** The webhook topic for `fulfillments/update` events.Occurs whenever a fulfillment is updated. Event payloads contain a Fulfillment. */
+  /** The webhook topic for `fulfillments/update` events. Occurs whenever a fulfillment is updated. Requires the `read_fulfillments` scope. */
   FulfillmentsUpdate = 'FULFILLMENTS_UPDATE',
-  /** The webhook topic for `attributed_sessions/first` events.Occurs whenever an order with a "first" attributed session is attributed. Event payloads contain a AttributedSession. */
+  /** The webhook topic for `attributed_sessions/first` events. Occurs whenever an order with a "first" attributed session is attributed. Requires the `read_marketing_events` scope. */
   AttributedSessionsFirst = 'ATTRIBUTED_SESSIONS_FIRST',
-  /** The webhook topic for `attributed_sessions/last` events.Occurs whenever an order with a "last" attributed session is attributed. Event payloads contain a AttributedSession. */
+  /** The webhook topic for `attributed_sessions/last` events. Occurs whenever an order with a "last" attributed session is attributed. Requires the `read_marketing_events` scope. */
   AttributedSessionsLast = 'ATTRIBUTED_SESSIONS_LAST',
-  /** The webhook topic for `order_transactions/create` events.Occurs when a order transaction is created or when it's status is updated. Only occurs for transactions with a status of success, failure or error. Event payloads contain a OrderTransaction. */
+  /** The webhook topic for `order_transactions/create` events. Occurs when a order transaction is created or when it's status is updated. Only occurs for transactions with a status of success, failure or error. Requires the `read_orders` scope. */
   OrderTransactionsCreate = 'ORDER_TRANSACTIONS_CREATE',
-  /** The webhook topic for `orders/cancelled` events.Occurs whenever an order is cancelled. Event payloads contain a Order. */
+  /** The webhook topic for `orders/cancelled` events. Occurs whenever an order is cancelled. Requires the `read_orders` scope. */
   OrdersCancelled = 'ORDERS_CANCELLED',
-  /** The webhook topic for `orders/create` events.Occurs whenever an order is created. Event payloads contain a Order. */
+  /** The webhook topic for `orders/create` events. Occurs whenever an order is created. Requires the `read_orders` scope. */
   OrdersCreate = 'ORDERS_CREATE',
-  /** The webhook topic for `orders/delete` events.Occurs whenever an order is deleted. Event payloads contain a Order. */
+  /** The webhook topic for `orders/delete` events. Occurs whenever an order is deleted. Requires the `read_orders` scope. */
   OrdersDelete = 'ORDERS_DELETE',
-  /** The webhook topic for `orders/edited` events.Occurs whenever an order is edited. Event payloads contain a Sales::OrderEdit. */
+  /** The webhook topic for `orders/edited` events. Occurs whenever an order is edited. Requires the `read_orders` scope. */
   OrdersEdited = 'ORDERS_EDITED',
-  /** The webhook topic for `orders/fulfilled` events.Occurs whenever an order is fulfilled. Event payloads contain a Order. */
+  /** The webhook topic for `orders/fulfilled` events. Occurs whenever an order is fulfilled. Requires the `read_orders` scope. */
   OrdersFulfilled = 'ORDERS_FULFILLED',
-  /** The webhook topic for `orders/paid` events.Occurs whenever an order is paid. Event payloads contain a Order. */
+  /** The webhook topic for `orders/paid` events. Occurs whenever an order is paid. Requires the `read_orders` scope. */
   OrdersPaid = 'ORDERS_PAID',
-  /** The webhook topic for `orders/partially_fulfilled` events.Occurs whenever an order is partially fulfilled. Event payloads contain a Order. */
+  /** The webhook topic for `orders/partially_fulfilled` events. Occurs whenever an order is partially fulfilled. Requires the `read_orders` scope. */
   OrdersPartiallyFulfilled = 'ORDERS_PARTIALLY_FULFILLED',
-  /** The webhook topic for `orders/updated` events.Occurs whenever an order is updated. Event payloads contain a Order. */
+  /** The webhook topic for `orders/updated` events. Occurs whenever an order is updated. Requires the `read_orders` scope. */
   OrdersUpdated = 'ORDERS_UPDATED',
-  /** The webhook topic for `product_listings/add` events.Occurs whenever an active product is listed on a channel. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_listings/add` events. Occurs whenever an active product is listed on a channel. Requires the `read_product_listings` scope. */
   ProductListingsAdd = 'PRODUCT_LISTINGS_ADD',
-  /** The webhook topic for `product_listings/remove` events.Occurs whenever a product listing is removed from the channel. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_listings/remove` events. Occurs whenever a product listing is removed from the channel. Requires the `read_product_listings` scope. */
   ProductListingsRemove = 'PRODUCT_LISTINGS_REMOVE',
-  /** The webhook topic for `product_listings/update` events.Occurs whenever a product publication is updated. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_listings/update` events. Occurs whenever a product publication is updated. Requires the `read_product_listings` scope. */
   ProductListingsUpdate = 'PRODUCT_LISTINGS_UPDATE',
-  /** The webhook topic for `product_publications/create` events.Occurs whenever a product publication for an active product is created, or whenever an existing product publication is published. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_publications/create` events. Occurs whenever a product publication for an active product is created, or whenever an existing product publication is published. Requires the `read_publications` scope. */
   ProductPublicationsCreate = 'PRODUCT_PUBLICATIONS_CREATE',
-  /** The webhook topic for `product_publications/delete` events.Occurs whenever a product publication for an active product is removed, or whenever an existing product publication is unpublished. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_publications/delete` events. Occurs whenever a product publication for an active product is removed, or whenever an existing product publication is unpublished. Requires the `read_publications` scope. */
   ProductPublicationsDelete = 'PRODUCT_PUBLICATIONS_DELETE',
-  /** The webhook topic for `product_publications/update` events.Occurs whenever a product publication is updated. Event payloads contain a ProductPublication. */
+  /** The webhook topic for `product_publications/update` events. Occurs whenever a product publication is updated. Requires the `read_publications` scope. */
   ProductPublicationsUpdate = 'PRODUCT_PUBLICATIONS_UPDATE',
-  /** The webhook topic for `products/create` events.Occurs whenever a product is created. Event payloads contain a Product. */
+  /** The webhook topic for `products/create` events. Occurs whenever a product is created. Requires the `read_products` scope. */
   ProductsCreate = 'PRODUCTS_CREATE',
-  /** The webhook topic for `products/delete` events.Occurs whenever a product publication is deleted. Event payloads contain a Product. */
+  /** The webhook topic for `products/delete` events. Occurs whenever a product publication is deleted. Requires the `read_products` scope. */
   ProductsDelete = 'PRODUCTS_DELETE',
-  /** The webhook topic for `products/update` events.Occurs whenever a product is updated, or whenever a product is ordered, or whenever a variant is added, removed, or updated. Event payloads contain a Product. */
+  /** The webhook topic for `products/update` events. Occurs whenever a product is updated, or whenever a product is ordered, or whenever a variant is added, removed, or updated. Requires the `read_products` scope. */
   ProductsUpdate = 'PRODUCTS_UPDATE',
-  /** The webhook topic for `refunds/create` events.Occurs whenever a new Refund is created on an order. Event payloads contain a Refund. */
+  /** The webhook topic for `refunds/create` events. Occurs whenever a new Refund is created on an order. Requires the `read_orders` scope. */
   RefundsCreate = 'REFUNDS_CREATE',
-  /** The webhook topic for `shipping_addresses/create` events.Occurs whenever a shipping address is created. Event payloads contain a ShippingAddress. */
+  /** The webhook topic for `shipping_addresses/create` events. Occurs whenever a shipping address is created. Requires the `read_shipping` scope. */
   ShippingAddressesCreate = 'SHIPPING_ADDRESSES_CREATE',
-  /** The webhook topic for `shipping_addresses/update` events.Occurs whenever a shipping address is updated. Event payloads contain a ShippingAddress. */
+  /** The webhook topic for `shipping_addresses/update` events. Occurs whenever a shipping address is updated. Requires the `read_shipping` scope. */
   ShippingAddressesUpdate = 'SHIPPING_ADDRESSES_UPDATE',
-  /** The webhook topic for `shop/update` events.Occurs whenever a shop is updated. Event payloads contain a Shop. */
+  /** The webhook topic for `shop/update` events. Occurs whenever a shop is updated. */
   ShopUpdate = 'SHOP_UPDATE',
-  /** The webhook topic for `tax_services/create` events.Occurs whenever a tax service is created. Event payloads contain a TaxService. */
+  /** The webhook topic for `tax_services/create` events. Occurs whenever a tax service is created. Requires the `read_taxes` scope. */
   TaxServicesCreate = 'TAX_SERVICES_CREATE',
-  /** The webhook topic for `tax_services/update` events.Occurs whenver a tax service is updated. Event payloads contain a TaxService. */
+  /** The webhook topic for `tax_services/update` events. Occurs whenver a tax service is updated. Requires the `read_taxes` scope. */
   TaxServicesUpdate = 'TAX_SERVICES_UPDATE',
-  /** The webhook topic for `themes/create` events.Occurs whenever a theme is created. Does not occur when theme files are created. Event payloads contain a Theme. */
+  /** The webhook topic for `themes/create` events. Occurs whenever a theme is created. Does not occur when theme files are created. Requires the `read_themes` scope. */
   ThemesCreate = 'THEMES_CREATE',
-  /** The webhook topic for `themes/delete` events.Occurs whenever a theme is deleted. Does not occur when theme files are deleted. Event payloads contain a Theme. */
+  /** The webhook topic for `themes/delete` events. Occurs whenever a theme is deleted. Does not occur when theme files are deleted. Requires the `read_themes` scope. */
   ThemesDelete = 'THEMES_DELETE',
-  /** The webhook topic for `themes/publish` events.Occurs whenever a theme with the main or mobile (deprecated) role is published. Event payloads contain a Theme. */
+  /** The webhook topic for `themes/publish` events. Occurs whenever a theme with the main or mobile (deprecated) role is published. Requires the `read_themes` scope. */
   ThemesPublish = 'THEMES_PUBLISH',
-  /** The webhook topic for `themes/update` events.Occurs whenever a theme is updated. Does not occur when theme files are updated. Event payloads contain a Theme. */
+  /** The webhook topic for `themes/update` events. Occurs whenever a theme is updated. Does not occur when theme files are updated. Requires the `read_themes` scope. */
   ThemesUpdate = 'THEMES_UPDATE',
-  /** The webhook topic for `variants/in_stock` events.Occurs whenever a variant becomes in stock. Event payloads contain a ProductVariant. */
+  /** The webhook topic for `variants/in_stock` events. Occurs whenever a variant becomes in stock. Requires the `read_products` scope. */
   VariantsInStock = 'VARIANTS_IN_STOCK',
-  /** The webhook topic for `variants/out_of_stock` events.Occurs whenever a variant becomes out of stock. Event payloads contain a ProductVariant. */
+  /** The webhook topic for `variants/out_of_stock` events. Occurs whenever a variant becomes out of stock. Requires the `read_products` scope. */
   VariantsOutOfStock = 'VARIANTS_OUT_OF_STOCK',
-  /** The webhook topic for `inventory_levels/connect` events.Occurs whenever an inventory level is connected. Event payloads contain a Inventory::State. */
+  /** The webhook topic for `inventory_levels/connect` events. Occurs whenever an inventory level is connected. Requires the `read_inventory` scope. */
   InventoryLevelsConnect = 'INVENTORY_LEVELS_CONNECT',
-  /** The webhook topic for `inventory_levels/update` events.Occurs whenever an inventory level is updated. Event payloads contain a Inventory::State. */
+  /** The webhook topic for `inventory_levels/update` events. Occurs whenever an inventory level is updated. Requires the `read_inventory` scope. */
   InventoryLevelsUpdate = 'INVENTORY_LEVELS_UPDATE',
-  /** The webhook topic for `inventory_levels/disconnect` events.Occurs whenever an inventory level is disconnected. Event payloads contain a Inventory::State. */
+  /** The webhook topic for `inventory_levels/disconnect` events. Occurs whenever an inventory level is disconnected. Requires the `read_inventory` scope. */
   InventoryLevelsDisconnect = 'INVENTORY_LEVELS_DISCONNECT',
-  /** The webhook topic for `inventory_items/create` events.Occurs whenever an inventory item is created. Event payloads contain a Inventory::Item. */
+  /** The webhook topic for `inventory_items/create` events. Occurs whenever an inventory item is created. Requires the `read_inventory` scope. */
   InventoryItemsCreate = 'INVENTORY_ITEMS_CREATE',
-  /** The webhook topic for `inventory_items/update` events.Occurs whenever an inventory item is updated. Event payloads contain a Inventory::Item. */
+  /** The webhook topic for `inventory_items/update` events. Occurs whenever an inventory item is updated. Requires the `read_inventory` scope. */
   InventoryItemsUpdate = 'INVENTORY_ITEMS_UPDATE',
-  /** The webhook topic for `inventory_items/delete` events.Occurs whenever an inventory item is deleted. Event payloads contain a Inventory::Item. */
+  /** The webhook topic for `inventory_items/delete` events. Occurs whenever an inventory item is deleted. Requires the `read_inventory` scope. */
   InventoryItemsDelete = 'INVENTORY_ITEMS_DELETE',
-  /** The webhook topic for `locations/create` events.Occurs whenever a location is created. Event payloads contain a Location. */
+  /** The webhook topic for `locations/create` events. Occurs whenever a location is created. Requires the `read_locations` scope. */
   LocationsCreate = 'LOCATIONS_CREATE',
-  /** The webhook topic for `locations/update` events.Occurs whenever a location is updated. Event payloads contain a Location. */
+  /** The webhook topic for `locations/update` events. Occurs whenever a location is updated. Requires the `read_locations` scope. */
   LocationsUpdate = 'LOCATIONS_UPDATE',
-  /** The webhook topic for `locations/delete` events.Occurs whenever a location is deleted. Event payloads contain a Location. */
+  /** The webhook topic for `locations/delete` events. Occurs whenever a location is deleted. Requires the `read_locations` scope. */
   LocationsDelete = 'LOCATIONS_DELETE',
-  /** The webhook topic for `tender_transactions/create` events.Occurs when a tender transaction is created. Event payloads contain a TenderTransaction. */
+  /** The webhook topic for `tender_transactions/create` events. Occurs when a tender transaction is created. Requires the `read_orders` scope. */
   TenderTransactionsCreate = 'TENDER_TRANSACTIONS_CREATE',
-  /** The webhook topic for `app_purchases_one_time/update` events.Occurs whenever a one-time app charge is updated. Event payloads contain a ApplicationCharge. */
+  /** The webhook topic for `app_purchases_one_time/update` events. Occurs whenever a one-time app charge is updated. */
   AppPurchasesOneTimeUpdate = 'APP_PURCHASES_ONE_TIME_UPDATE',
-  /** The webhook topic for `app_subscriptions/update` events.Occurs whenever an app subscription is updated. Event payloads contain a RecurringApplicationCharge. */
+  /** The webhook topic for `app_subscriptions/update` events. Occurs whenever an app subscription is updated. */
   AppSubscriptionsUpdate = 'APP_SUBSCRIPTIONS_UPDATE',
-  /** The webhook topic for `locales/create` events.Occurs whenever a shop locale is created Event payloads contain a ShopAlternateLocale. */
+  /** The webhook topic for `locales/create` events. Occurs whenever a shop locale is created Requires the `read_locales` scope. */
   LocalesCreate = 'LOCALES_CREATE',
-  /** The webhook topic for `locales/update` events.Occurs whenever a shop locale is updated, such as published or unpublished Event payloads contain a ShopAlternateLocale. */
+  /** The webhook topic for `locales/update` events. Occurs whenever a shop locale is updated, such as published or unpublished Requires the `read_locales` scope. */
   LocalesUpdate = 'LOCALES_UPDATE',
-  /** The webhook topic for `domains/create` events.Occurs whenever a domain is created. Event payloads contain a Domain. */
+  /** The webhook topic for `domains/create` events. Occurs whenever a domain is created. */
   DomainsCreate = 'DOMAINS_CREATE',
-  /** The webhook topic for `domains/update` events.Occurs whenever a domain is updated. Event payloads contain a Domain. */
+  /** The webhook topic for `domains/update` events. Occurs whenever a domain is updated. */
   DomainsUpdate = 'DOMAINS_UPDATE',
-  /** The webhook topic for `domains/destroy` events.Occurs whenever a domain is destroyed. Event payloads contain a Domain. */
+  /** The webhook topic for `domains/destroy` events. Occurs whenever a domain is destroyed. */
   DomainsDestroy = 'DOMAINS_DESTROY',
-  /** The webhook topic for `subscription_contracts/create` events.Occurs whenever a subscription contract is created. Event payloads contain a Sales::Subscriptions::Contract. */
+  /** The webhook topic for `subscription_contracts/create` events. Occurs whenever a subscription contract is created. Requires the `read_own_subscription_contracts` scope. */
   SubscriptionContractsCreate = 'SUBSCRIPTION_CONTRACTS_CREATE',
-  /** The webhook topic for `subscription_contracts/update` events.Occurs whenever a subscription contract is updated. Event payloads contain a Sales::Subscriptions::Contract. */
+  /** The webhook topic for `subscription_contracts/update` events. Occurs whenever a subscription contract is updated. Requires the `read_own_subscription_contracts` scope. */
   SubscriptionContractsUpdate = 'SUBSCRIPTION_CONTRACTS_UPDATE',
-  /** The webhook topic for `profiles/create` events.Occurs whenever a delivery profile is created Event payloads contain a Delivery::Profile. */
+  /** The webhook topic for `profiles/create` events. Occurs whenever a delivery profile is created Requires the `read_shipping` scope. */
   ProfilesCreate = 'PROFILES_CREATE',
-  /** The webhook topic for `profiles/update` events.Occurs whenever a delivery profile is updated Event payloads contain a Delivery::Profile. */
+  /** The webhook topic for `profiles/update` events. Occurs whenever a delivery profile is updated Requires the `read_shipping` scope. */
   ProfilesUpdate = 'PROFILES_UPDATE',
-  /** The webhook topic for `profiles/delete` events.Occurs whenever a delivery profile is deleted Event payloads contain a Delivery::Profile. */
+  /** The webhook topic for `profiles/delete` events. Occurs whenever a delivery profile is deleted Requires the `read_shipping` scope. */
   ProfilesDelete = 'PROFILES_DELETE',
-  /** The webhook topic for `subscription_billing_attempts/success` events.Occurs whenever a subscription billing attempt succeeds. Event payloads contain a Sales::Subscriptions::BillingAttempt. */
+  /** The webhook topic for `subscription_billing_attempts/success` events. Occurs whenever a subscription billing attempt succeeds. Requires the `read_own_subscription_contracts` scope. */
   SubscriptionBillingAttemptsSuccess = 'SUBSCRIPTION_BILLING_ATTEMPTS_SUCCESS',
-  /** The webhook topic for `subscription_billing_attempts/failure` events.Occurs whenever a subscription billing attempt fails. Event payloads contain a Sales::Subscriptions::BillingAttempt. */
+  /** The webhook topic for `subscription_billing_attempts/failure` events. Occurs whenever a subscription billing attempt fails. Requires the `read_own_subscription_contracts` scope. */
   SubscriptionBillingAttemptsFailure = 'SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE',
-  /** The webhook topic for `subscription_billing_attempts/challenged` events.Occurs when the financial instutition challenges the subscripttion billing attempt charge as per 3D Secure. Event payloads contain a Sales::Subscriptions::BillingAttempt. */
+  /** The webhook topic for `subscription_billing_attempts/challenged` events. Occurs when the financial instutition challenges the subscripttion billing attempt charge as per 3D Secure. Requires the `read_own_subscription_contracts` scope. */
   SubscriptionBillingAttemptsChallenged = 'SUBSCRIPTION_BILLING_ATTEMPTS_CHALLENGED',
-  /** The webhook topic for `payment_terms/create` events.Occurs whenever payment terms are created. Event payloads contain a Payments::PaymentFlexibility::PaymentTerms::PaymentTerms. */
+  /** The webhook topic for `payment_terms/create` events. Occurs whenever payment terms are created. Requires the `read_payment_terms` scope. */
   PaymentTermsCreate = 'PAYMENT_TERMS_CREATE',
-  /** The webhook topic for `payment_terms/delete` events.Occurs whenever payment terms are deleted. Event payloads contain a Payments::PaymentFlexibility::PaymentTerms::PaymentTerms. */
+  /** The webhook topic for `payment_terms/delete` events. Occurs whenever payment terms are deleted. Requires the `read_payment_terms` scope. */
   PaymentTermsDelete = 'PAYMENT_TERMS_DELETE',
-  /** The webhook topic for `payment_terms/update` events.Occurs whenever payment terms are updated. Event payloads contain a Payments::PaymentFlexibility::PaymentTerms::PaymentTerms. */
+  /** The webhook topic for `payment_terms/update` events. Occurs whenever payment terms are updated. Requires the `read_payment_terms` scope. */
   PaymentTermsUpdate = 'PAYMENT_TERMS_UPDATE',
-  /** The webhook topic for `selling_plan_groups/create` events.Notifies when a SellingPlanGroup is created. Event payloads contain a SellingPlanGroup. */
+  /** The webhook topic for `selling_plan_groups/create` events. Notifies when a SellingPlanGroup is created. Requires the `read_products` scope. */
   SellingPlanGroupsCreate = 'SELLING_PLAN_GROUPS_CREATE',
-  /** The webhook topic for `selling_plan_groups/update` events.Notifies when a SellingPlanGroup is updated. Event payloads contain a SellingPlanGroup. */
+  /** The webhook topic for `selling_plan_groups/update` events. Notifies when a SellingPlanGroup is updated. Requires the `read_products` scope. */
   SellingPlanGroupsUpdate = 'SELLING_PLAN_GROUPS_UPDATE',
-  /** The webhook topic for `selling_plan_groups/delete` events.Notifies when a SellingPlanGroup is deleted. Event payloads contain a SellingPlanGroup. */
+  /** The webhook topic for `selling_plan_groups/delete` events. Notifies when a SellingPlanGroup is deleted. Requires the `read_products` scope. */
   SellingPlanGroupsDelete = 'SELLING_PLAN_GROUPS_DELETE',
-  /** The webhook topic for `bulk_operations/finish` events.Notifies when a Bulk Operation finishes. Event payloads contain a BulkOperation. */
+  /** The webhook topic for `bulk_operations/finish` events. Notifies when a Bulk Operation finishes. */
   BulkOperationsFinish = 'BULK_OPERATIONS_FINISH'
 }
 
