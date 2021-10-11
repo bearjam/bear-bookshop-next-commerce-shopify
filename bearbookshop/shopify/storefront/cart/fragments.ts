@@ -4,6 +4,7 @@ export const cartDetailsFragment = gql`
   fragment cartDetails on Cart {
     id
     checkoutUrl
+    note
     createdAt
     updatedAt
     lines(first: 10) {

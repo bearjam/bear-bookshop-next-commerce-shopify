@@ -3,7 +3,7 @@
   @apply mt-1 w-full py-1 pl-2;
 }
 
-.base[aria-invalid="true"] {
+.base[aria-invalid='true'] {
   @apply border-red-600 border-2 box-border;
 }
 
@@ -71,8 +71,6 @@
 }
 
 .form {
-  @apply max-w-lg mx-auto;
-  @apply p-4;
 }
 
 .form > div {

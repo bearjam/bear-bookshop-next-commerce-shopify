@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { OpacityPresence, Spinner } from '~/components'
-import CheckoutNoteForm from '~/components/CheckoutNoteForm'
+import BasketNoteForm from '~/components/BasketNoteForm'
 import { ButtonLink, IncrementField } from '~/components/inputs'
 import { useCart } from '~/shopify/storefront/cart'
 import { CartDetailsFragment } from '~/shopify/storefront/documents'
@@ -104,7 +104,7 @@ const BasketPageWithData = ({ cart }: { cart: CartDetailsFragment }) => {
         </tfoot>
       </table>
       <div>
-        <CheckoutNoteForm />
+        <BasketNoteForm />
       </div>
       <div className={css.button}>
         <ButtonLink href={cart.checkoutUrl}>Checkout</ButtonLink>
@@ -135,13 +135,9 @@ const BasketPage = () => {
               <ButtonLink href="/shop">Back to shop</ButtonLink>
             </div>
           </OpacityPresence>
-        ) : cart ? (
-          <OpacityPresence>
-            <BasketPageWithData cart={cart} />
-          </OpacityPresence>
         ) : (
           <OpacityPresence>
-            <h2>nothing!</h2>
+            <BasketPageWithData cart={cart} />
           </OpacityPresence>
         )}
       </AnimatePresence>

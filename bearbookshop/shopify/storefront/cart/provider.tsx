@@ -15,6 +15,8 @@ import {
   CartLinesUpdateMutation,
   CartLinesUpdateMutationVariables,
   CartLineUpdateInput,
+  CartNoteUpdateMutation,
+  CartNoteUpdateMutationVariables,
   CreateCartMutation,
   CreateCartMutationVariables,
   GetCartQuery,
@@ -24,6 +26,7 @@ import {
   cartLinesAddMutation,
   cartLinesRemoveMutation,
   cartLinesUpdateMutation,
+  cartNoteUpdateMutation,
   createCartMutation,
   getCartQuery,
 } from './queries'
@@ -33,6 +36,7 @@ type Ctx = {
   addItem: (lines: CartLineInput | CartLineInput[]) => void
   removeItem: (lineId: string) => void
   updateItem: (lines: CartLineUpdateInput) => void
+  updateNote: (note: string) => void
   loading: boolean
   error: any
 }
@@ -106,9 +110,27 @@ export const CartProvider = ({ children }: Props) => {
     await mutate()
   }
 
+  const updateNote = async (note: string) => {
+    if (!cart) return
+
+    await storefrontFetch<
+      CartNoteUpdateMutation,
+      CartNoteUpdateMutationVariables
+    >(cartNoteUpdateMutation, { cartId: cart.id, note })
+    await mutate()
+  }
+
   return (
     <CtxProvider
-      value={{ cart, addItem, removeItem, updateItem, loading, error }}
+      value={{
+        cart,
+        addItem,
+        removeItem,
+        updateItem,
+        updateNote,
+        loading,
+        error,
+      }}
     >
       {children}
     </CtxProvider>

@@ -65,3 +65,18 @@ export const cartLinesUpdateMutation = gql`
     }
   }
 `
+
+export const cartNoteUpdateMutation = gql`
+  mutation cartNoteUpdate($cartId: ID!, $note: String!) {
+    cartNoteUpdate(cartId: $cartId, note: $note) {
+      cart {
+        id
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`
