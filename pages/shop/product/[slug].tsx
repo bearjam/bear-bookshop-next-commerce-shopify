@@ -9,7 +9,6 @@ import { useProductByHandle } from '~/shopify/storefront/products'
 const ProductPage = () => {
   const router = useRouter()
   const { data } = useProductByHandle(router.query.slug as string)
-  useEffect(() => console.log({ data }), [data])
   return (
     <div>
       <AnimatePresence exitBeforeEnter>

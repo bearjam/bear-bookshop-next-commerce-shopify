@@ -29,12 +29,9 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
     try {
       await removeItem(item.id)
     } catch (error) {
-      console.log({ error })
       setRemoving(false)
     }
   }
-
-  useEffect(() => void console.log(removing), [removing])
 
   useEffect(() => {
     if (item.quantity !== Number(quantity)) {

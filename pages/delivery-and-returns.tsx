@@ -1,5 +1,6 @@
-import React from "react"
-import css from "./delivery.module.css"
+import React from 'react'
+import css from './delivery.module.css'
+import Link from 'next/link'
 
 const delivery = () => {
   return (
@@ -50,8 +51,11 @@ const delivery = () => {
             order.
           </li>
           <li>
-            Please see our <a href="/visit">visit page</a> for details on
-            collecting your order safely during lockdown.
+            Please see our{' '}
+            <Link href="/visit">
+              <a>visit page</a>
+            </Link>{' '}
+            for details on collecting your order safely during lockdown.
           </li>
         </ul>
       </div>

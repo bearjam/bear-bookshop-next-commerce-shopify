@@ -36,13 +36,14 @@ const ProductPageView = ({ product }: Props) => {
   const { addItem } = useCart()
 
   const addProduct = async () => {
+    console.log('?')
     try {
-      await addItem({
+      const bar = await addItem({
         merchandiseId: String(variant.id),
         quantity,
       })
-    } catch (e) {
-      console.log({ e })
+    } catch (error) {
+      console.log({ error })
     }
   }
   return (

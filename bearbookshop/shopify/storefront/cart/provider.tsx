@@ -1,6 +1,6 @@
 import { SHOPIFY_COOKIE_EXPIRE } from '@framework/const'
 import Cookies from 'js-cookie'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { SHOPIFY_CART_ID_COOKIE } from '~/lib/const'
 import { createCtx } from '~/lib/context'
@@ -39,6 +39,7 @@ type Ctx = {
   updateNote: (note: string) => void
   loading: boolean
   error: any
+  totalItems: number
 }
 
 const [useCtx, CtxProvider] = createCtx<Ctx>()
@@ -80,6 +81,18 @@ export const CartProvider = ({ children }: Props) => {
   const { data: cart, error, mutate } = useSWR('cart', fetcher)
   const loading = !cart && !error
 
+  const [totalItems, setTotalItems] = useState(0)
+  useEffect(
+    () =>
+      setTotalItems(
+        cart?.lines.edges.reduce(
+          (acc: number, v) => acc + v.node.quantity,
+          0
+        ) ?? 0
+      ),
+    [cart, setTotalItems]
+  )
+
   const addItem = async (lines: CartLineInput | CartLineInput[]) => {
     if (!cart) return
     await storefrontFetch<CartLinesAddMutation, CartLinesAddMutationVariables>(
@@ -95,9 +108,6 @@ export const CartProvider = ({ children }: Props) => {
       CartLinesRemoveMutation,
       CartLinesRemoveMutationVariables
     >(cartLinesRemoveMutation, { cartId: cart.id, lineIds: [lineId] })
-
-    console.log({ lineId })
-
     await mutate()
   }
 
@@ -112,7 +122,6 @@ export const CartProvider = ({ children }: Props) => {
 
   const updateNote = async (note: string) => {
     if (!cart) return
-
     await storefrontFetch<
       CartNoteUpdateMutation,
       CartNoteUpdateMutationVariables
@@ -130,6 +139,7 @@ export const CartProvider = ({ children }: Props) => {
         updateNote,
         loading,
         error,
+        totalItems,
       }}
     >
       {children}

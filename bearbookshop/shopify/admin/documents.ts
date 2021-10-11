@@ -74,12 +74,12 @@ export type Scalars = {
 
 
 
-/** Represents the access scope permission that is applicable to a merchant's shop, such as `read_orders`. */
+/** Represents the permission required to access a Shopify Admin API or Storefront API resource for a shop. Access scopes are granted by merchants to requesting applications. */
 export type AccessScope = {
   __typename?: 'AccessScope';
-  /** Description of the access scopes enabled on an api permission. */
+  /** Description of the resource access provided by the access scope when granted to an application. */
   description: Scalars['String'];
-  /** A human-friendly string for an access scope. */
+  /** Represents the access scope as a readable string. Typically follows the format `{action}_{resource}`: a `read` or `write` action, followed by the resource on which the action is allowed to be performed on, separated by an underscore. For example, `read_orders`; `write_products`. */
   handle: Scalars['String'];
 };
 
@@ -6193,10 +6193,10 @@ export enum DiscountErrorCode {
   TooManyArguments = 'TOO_MANY_ARGUMENTS',
   /** Missing a required argument. */
   MissingArgument = 'MISSING_ARGUMENT',
-  /** Value is outside allowed range. */
-  ValueOutsideRange = 'VALUE_OUTSIDE_RANGE',
   /** Exceeded maximum allowed value. */
   ExceededMax = 'EXCEEDED_MAX',
+  /** Value is outside allowed range. */
+  ValueOutsideRange = 'VALUE_OUTSIDE_RANGE',
   /** Cannot have both minimum subtotal and quantity present. */
   MinimumSubtotalAndQuantityRangeBothPresent = 'MINIMUM_SUBTOTAL_AND_QUANTITY_RANGE_BOTH_PRESENT',
   /** Active period overlaps with other automatic discounts. At any given time, only one automatic discount can be active. */

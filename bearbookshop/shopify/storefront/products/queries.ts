@@ -48,7 +48,7 @@ export const getProductTagsQuery = gql`
   }
 `
 
-export const getProductByHandle = gql`
+export const getProductByHandleQuery = gql`
   query getProductByHandle($handle: String!) {
     product(handle: $handle) {
       ...product
@@ -56,6 +56,23 @@ export const getProductByHandle = gql`
   }
 
   ${productFragment}
+`
+
+export const getCollectionsQuery = gql`
+  query getCollections {
+    collections(first: 6) {
+      edges {
+        node {
+          id
+          image {
+            transformedSrc(maxWidth: 640)
+          }
+          title
+          handle
+        }
+      }
+    }
+  }
 `
 
 // export const createMetafieldStorefrontVisibilityMutation = gql`

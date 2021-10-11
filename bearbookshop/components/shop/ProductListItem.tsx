@@ -34,10 +34,11 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
 
   const { addItem } = useCart()
   const addProduct = async () => {
+    console.log('?')
     try {
       await addItem({ merchandiseId: String(variant.id), quantity: 1 })
-    } catch (e) {
-      console.log({ e })
+    } catch (error) {
+      console.log({ error })
     }
   }
   return (

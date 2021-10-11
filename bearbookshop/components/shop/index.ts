@@ -1,5 +1,5 @@
 export { default as BooksIndex } from './BooksIndex'
-export { default as BooksViews } from './BooksView'
+export { default as BooksView } from './BooksView'
 export { default as ProductList } from './ProductList'
 export { default as ProductListItem } from './ProductListItem'
 export { default as ProductPageView } from './ProductPageView'

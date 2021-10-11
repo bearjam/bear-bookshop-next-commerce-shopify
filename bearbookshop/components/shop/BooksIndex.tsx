@@ -1,6 +1,6 @@
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useDebouncedCallback } from 'use-debounce'
 import * as z from 'zod'
@@ -48,14 +48,7 @@ const ShopIndex = ({ tags: allTags }: Props) => {
     hasNextPage,
     onLoadMore: loadMore,
     disabled: !!error,
-    // rootMargin: '0px 0px 400px 0px',
   })
-
-  // const total = data
-  //   ?.reduce((acc: any, v) => [...acc, ...v.products.edges], [])
-  //   .flat().length
-
-  // useEffect(() => void console.log({ total }), [total])
 
   return (
     <div className={css.root}>

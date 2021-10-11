@@ -8,6 +8,7 @@ import {
   GetAllProductsQueryVariables,
   GetCollectionProductsQuery,
   GetCollectionProductsQueryVariables,
+  GetCollectionsQuery,
   GetProductByHandleQuery,
   GetProductByHandleQueryVariables,
   GetProductTagsQuery,
@@ -15,7 +16,8 @@ import {
 import {
   getAllProductsQuery,
   getCollectionProductsQuery,
-  getProductByHandle,
+  getCollectionsQuery,
+  getProductByHandleQuery,
   getProductTagsQuery,
 } from './queries'
 import { queryToStaticPropsGetter } from './util'
@@ -76,10 +78,15 @@ export const getHomeProps = queryToStaticPropsGetter<
   GetCollectionProductsQueryVariables
 >(getCollectionProductsQuery, { query: 'title:home', first: 3 })
 
+export const getShopIndexProps = queryToStaticPropsGetter<
+  GetCollectionsQuery,
+  {}
+>(getCollectionsQuery, {})
+
 export const useProductByHandle = (handle: string) => {
   const fetch = (handle: string) =>
     storefrontFetch<GetProductByHandleQuery, GetProductByHandleQueryVariables>(
-      getProductByHandle,
+      getProductByHandleQuery,
       { handle }
     )
   return useSWR<GetProductByHandleQuery>(handle, fetch)
