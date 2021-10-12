@@ -20,9 +20,7 @@ const Li = styled('li', {
 
 const Price = styled('div', {})
 
-const Title = styled('div', {})
-
-const ButtonContainer = styled('div', {})
+const Title = styled('h4', {})
 
 const ProductListItem = ({ product }: ProductListItemProps) => {
   const { handle, title } = product
@@ -36,27 +34,27 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
 
   return (
     <Li>
-      <Link href={`/shop/product/${handle}`}>
-        <a>
-          <Flex center>
-            {imageSrc ? (
-              <Image
-                src={imageSrc}
-                width={250}
-                height={300}
-                alt={altText ?? 'Book cover image'}
-              />
-            ) : (
-              <h4>Image not found</h4>
-            )}
-          </Flex>
-          <Title>{title}</Title>
-        </a>
-      </Link>
-      <Price>{price}</Price>
-      <ButtonContainer>
+      <Flex center direction="column">
+        <Link href={`/shop/product/${handle}`}>
+          <a>
+            <Flex center direction="column">
+              {imageSrc ? (
+                <Image
+                  src={imageSrc}
+                  width={250}
+                  height={300}
+                  alt={altText ?? 'Book cover image'}
+                />
+              ) : (
+                <h4>Image not found</h4>
+              )}
+              <Title>{title}</Title>
+            </Flex>
+          </a>
+        </Link>
+        <Price>{price}</Price>
         <AddToBasketButton id={String(variant.id)} quantity={1} />
-      </ButtonContainer>
+      </Flex>
     </Li>
   )
 }

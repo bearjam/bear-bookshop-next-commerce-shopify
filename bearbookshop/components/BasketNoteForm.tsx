@@ -31,12 +31,12 @@ const BasketNoteForm = () => {
 
   return (
     <div>
-      <h3>Basket Note</h3>
+      <h3>Add a Personalised Message</h3>
       {!note ? (
         <div>
           {!editingNote ? (
             <div>
-              <Button onClick={editNote}>Add Note</Button>
+              <Button onClick={editNote}>Add a Message</Button>
             </div>
           ) : (
             <Form onSubmit={handleSubmit(onSubmit)}>

@@ -28,7 +28,8 @@
 }
 
 .books-container {
-  @apply flex flex-wrap justify-evenly;
+  /* @apply flex flex-wrap justify-evenly; */
+  @apply grid grid-cols-1 sm:grid-cols-3;
 }
 
 .discover {

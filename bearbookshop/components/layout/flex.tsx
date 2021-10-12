@@ -33,5 +33,13 @@ export const Flex = styled('div', {
         alignItems: 'flex-end',
       },
     },
+    direction: {
+      row: {
+        flexDirection: 'row',
+      },
+      column: {
+        flexDirection: 'column',
+      },
+    },
   },
 })

@@ -2,6 +2,8 @@ import { InferGetStaticPropsType } from 'next'
 import Image from 'next/image'
 import BookCard from '~/components/BookCard'
 import { ButtonLink } from '~/components/inputs'
+import { Flex } from '~/components/layout/flex'
+import { ProductList, ProductListItem } from '~/components/shop'
 import { getHomeProps } from '~/shopify/storefront/products'
 import { Product } from '~/types'
 import css from './index.module.css'
@@ -38,14 +40,18 @@ const IndexPage = ({
             Hand-picked books that you’ll love as much as your little ones do.
             We deliver across the UK.
           </p>
-          <div className={css['books-container']}>
-            {products.map((ps, i) => (
-              <BookCard key={ps.handle} product={ps as Product} />
+          <ProductList>
+            {products.map((ps) => (
+              <ProductListItem key={ps.handle} product={ps as Product} />
             ))}
-          </div>
-          <div className={css.button}>
+          </ProductList>
+          {/* {products.map((ps, i) => (
+              <BookCard key={ps.handle} product={ps as Product} />
+            ))} */}
+
+          <Flex center>
             <ButtonLink href="/shop">Shop all books</ButtonLink>
-          </div>
+          </Flex>
         </div>
         <div className={css.discover}>
           {/* <div className="relative" style={{ height: "32rem" }}> */}
