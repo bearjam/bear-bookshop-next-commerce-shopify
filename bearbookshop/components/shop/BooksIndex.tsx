@@ -30,7 +30,7 @@ const ShopIndex = ({ tags: allTags }: Props) => {
   const setTags = (ts: string[]) =>
     void router.push({ query: { ...query, tags: ts } })
 
-  const { data, error, setSize } = useProductsQuery({
+  const { data, error, setSize, size } = useProductsQuery({
     search: q,
     tags,
     type: 'Book',

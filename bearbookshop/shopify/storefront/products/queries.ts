@@ -4,11 +4,10 @@ import { productConnectionFragment, productFragment } from './fragments'
 export const getAllProductsQuery = gql`
   query getAllProducts(
     $query: String = ""
-    $first: Int
-    $after: String
-    $sortKey: ProductSortKeys = RELEVANCE
+    $first: Int = 21
+    $after: String = null
   ) {
-    products(query: $query, first: $first, after: $after, sortKey: $sortKey) {
+    products(query: $query, first: $first, after: $after) {
       ...productConnection
     }
   }

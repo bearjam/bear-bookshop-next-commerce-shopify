@@ -34,11 +34,13 @@ type ProductsQueryInput = {
   type?: string
 }
 
-const productsFetch = (query: string, first: number, after?: string) =>
-  storefrontFetch<GetAllProductsQuery, GetAllProductsQueryVariables>(
+const productsFetch = (input: any) => {
+  const { query, after } = JSON.parse(input)
+  return storefrontFetch<GetAllProductsQuery, GetAllProductsQueryVariables>(
     getAllProductsQuery,
-    { query, first, after }
+    { query, after }
   )
+}
 
 export const useProductsQuery = ({
   search,
@@ -51,6 +53,8 @@ export const useProductsQuery = ({
       query += search
     }
 
+    query += `${search ? ' AND ' : ''}` + 'available_for_sale:true'
+
     if (tags && tags.length > 0) {
       query +=
         `${search ? ' AND ' : ''}` +
@@ -58,18 +62,21 @@ export const useProductsQuery = ({
     }
 
     if (!!type) {
-      query += ` AND product_type:${type} `
+      query += ` AND product_type:${type}`
     }
-
-    query += ' AND available_for_sale:true'
 
     return query
   }, [search, tags, type])
 
   return useSWRInfinite<GetAllProductsQuery>((pageIndex, prevData) => {
+    if (prevData && !prevData.products.pageInfo.hasNextPage) return null // reached the end
+    if (pageIndex === 0) return JSON.stringify({ query, after: null })
+
     const after =
-      prevData?.products.edges[prevData.products.edges.length - 1].cursor
-    return [query, PER_PAGE, after]
+      prevData?.products.edges[prevData.products.edges.length - 1].cursor ??
+      null
+
+    return JSON.stringify({ query, after })
   }, productsFetch)
 }
 

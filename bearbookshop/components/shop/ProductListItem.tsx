@@ -7,6 +7,7 @@ import { useCart } from '~/shopify/storefront/cart'
 import { Product } from '~/types'
 import { Button } from '../inputs'
 import { Flex } from '../layout/flex'
+import AddToBasketButton from './AddToBasketButton'
 
 type ProductListItemProps = {
   product: Product
@@ -29,18 +30,10 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   const variant = product.variants.edges[0].node
   const price = Number(variant.priceV2.amount).toFixed(2)
 
-  const image = product.images.edges[0].node
+  const image = product.images.edges[0]?.node
+  if (!image) return null
   const { altText, transformedSrc: imageSrc } = image
 
-  const { addItem } = useCart()
-  const addProduct = async () => {
-    console.log('?')
-    try {
-      await addItem({ merchandiseId: String(variant.id), quantity: 1 })
-    } catch (error) {
-      console.log({ error })
-    }
-  }
   return (
     <Li>
       <Link href={`/shop/product/${handle}`}>
@@ -62,7 +55,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
       </Link>
       <Price>{price}</Price>
       <ButtonContainer>
-        <Button onClick={addProduct}>Add to basket</Button>
+        <AddToBasketButton id={String(variant.id)} quantity={1} />
       </ButtonContainer>
     </Li>
   )

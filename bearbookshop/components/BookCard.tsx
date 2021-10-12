@@ -4,6 +4,7 @@ import { Product } from '~/types'
 import css from './BookCard.module.css'
 import { Button } from './inputs'
 import { Flex } from './layout/flex'
+import AddToBasketButton from './shop/AddToBasketButton'
 
 type Props = PropsWithChildren<{
   product: Product
@@ -15,8 +16,6 @@ const BookCard = ({ product }: Props) => {
   const price = Number(variant.priceV2.amount).toFixed(2)
 
   const imgURL = images.edges[0].node.transformedSrc
-
-  const addProduct = () => {}
 
   return (
     <div className={css.card}>
@@ -34,7 +33,7 @@ const BookCard = ({ product }: Props) => {
       </a>
       <p>£{Number(price).toFixed(2)}</p>
       <div className={css.button}>
-        <Button onClick={addProduct}>Add to basket</Button>
+        <AddToBasketButton id={String(variant.id)} quantity={1} />
       </div>
     </div>
   )

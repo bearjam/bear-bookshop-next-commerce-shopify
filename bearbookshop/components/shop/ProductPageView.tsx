@@ -4,6 +4,7 @@ import css from './ProductPageView.module.css'
 import Image from 'next/image'
 import { Button } from '../inputs'
 import { useCart } from '~/shopify/storefront/cart'
+import AddToBasketButton from './AddToBasketButton'
 
 type Props = {
   product: ProductFragment
@@ -36,9 +37,8 @@ const ProductPageView = ({ product }: Props) => {
   const { addItem } = useCart()
 
   const addProduct = async () => {
-    console.log('?')
     try {
-      const bar = await addItem({
+      await addItem({
         merchandiseId: String(variant.id),
         quantity,
       })
@@ -79,7 +79,8 @@ const ProductPageView = ({ product }: Props) => {
           <span>{quantity}</span>
           <button onClick={increment}>+</button>
         </div>
-        <Button onClick={addProduct}>Add to basket</Button>
+        <AddToBasketButton id={String(variant.id)} quantity={quantity} />
+        {/* <Button onClick={addProduct}>Add to basket</Button> */}
       </div>
     </div>
   )
