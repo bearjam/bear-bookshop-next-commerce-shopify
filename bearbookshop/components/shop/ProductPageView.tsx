@@ -55,7 +55,7 @@ const ProductPageView = ({ product }: Props) => {
                 src={imgURL}
                 alt="book cover"
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
               />
             </div>
           ) : (

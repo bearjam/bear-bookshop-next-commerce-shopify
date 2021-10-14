@@ -42,7 +42,7 @@ const ShopIndexPage = ({
                   width={400}
                   height={400}
                   // layout="fill"
-                  objectFit="cover"
+                  objectFit="contain"
                 />
               </ItemDiv>
               <h3>{node.title}</h3>
