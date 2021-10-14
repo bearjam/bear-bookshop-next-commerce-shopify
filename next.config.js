@@ -13,6 +13,16 @@ const isVendure = provider === 'vendure'
 
 module.exports = withCommerceConfig({
   commerce,
+  async redirects() {
+    return [
+      {
+        source: '/admin',
+        destination: 'https://bearbookshop.myshopify.com/admin',
+        permanent: true,
+      },
+    ]
+  },
+
   rewrites() {
     return [
       (isBC || isShopify || isSwell || isVendure || isSaleor) && {
