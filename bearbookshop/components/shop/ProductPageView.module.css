@@ -27,6 +27,10 @@
   @apply mt-3;
 }
 
+.lower p:not(:first-of-type) {
+  @apply my-4;
+}
+
 .quantity {
   @apply font-body;
 }

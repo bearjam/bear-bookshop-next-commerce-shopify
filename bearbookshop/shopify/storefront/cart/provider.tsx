@@ -62,9 +62,8 @@ const createCart = async () =>
   )
 
 export const CartProvider = ({ children }: Props) => {
-  const cartId = getCartId()
-
   const fetcher = async () => {
+    const cartId = getCartId()
     const cart = cartId
       ? await fetchCart(cartId).then((x) => x.cart as CartDetailsFragment)
       : await createCart().then(
@@ -79,19 +78,20 @@ export const CartProvider = ({ children }: Props) => {
   }
 
   const { data: cart, error, mutate } = useSWR('cart', fetcher)
+
   const loading = !cart && !error
 
   const [totalItems, setTotalItems] = useState(0)
-  useEffect(
-    () =>
-      setTotalItems(
-        cart?.lines.edges.reduce(
-          (acc: number, v) => acc + v.node.quantity,
-          0
-        ) ?? 0
-      ),
-    [cart, setTotalItems]
-  )
+  useEffect(() => {
+    if (!cart && error) {
+      Cookies.remove(SHOPIFY_CART_ID_COOKIE)
+      mutate()
+    }
+    setTotalItems(
+      cart?.lines.edges.reduce((acc: number, v) => acc + v.node.quantity, 0) ??
+        0
+    )
+  }, [cart, error, setTotalItems, mutate])
 
   const addItem = async (lines: CartLineInput | CartLineInput[]) => {
     if (!cart) return

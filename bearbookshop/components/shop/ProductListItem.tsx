@@ -20,7 +20,11 @@ const Li = styled('li', {
 
 const Price = styled('div', {})
 
-const Title = styled('h4', {})
+const Title = styled('h4', {
+  textAlign: 'center',
+  width: '75%',
+  marginTop: '1rem',
+})
 
 const ProductListItem = ({ product }: ProductListItemProps) => {
   const { handle, title } = product
@@ -53,7 +57,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
             </Flex>
           </a>
         </Link>
-        <Price>{price}</Price>
+        <Price>£{price}</Price>
         <AddToBasketButton id={String(variant.id)} quantity={1} />
       </Flex>
     </Li>

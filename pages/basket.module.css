@@ -10,7 +10,7 @@
   @apply underline;
 }
 
-.root > table button {
+.root table button {
   border-width: 0.5px;
   height: 1.2rem;
   @apply border-gray-900 w-4 mx-2;
@@ -77,4 +77,12 @@
   .root th:nth-child(5) {
     @apply pl-4;
   }
+}
+
+.root tr {
+  @apply transition-opacity;
+}
+
+.root tr[data-removing='true'] {
+  opacity: 0.3;
 }

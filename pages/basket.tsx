@@ -43,7 +43,7 @@ const LineItemRow = ({ item }: { item: LineItem }) => {
   // maybe opacity when removing
 
   return (
-    <tr key={item.id}>
+    <tr key={item.id} data-removing={removing}>
       <td>
         <div className="relative h-20">
           <Image
@@ -96,7 +96,9 @@ const BasketPageWithData = ({ cart }: { cart: CartDetailsFragment }) => {
         <tfoot>
           <tr>
             <th>Total</th>
-            <td>£{cart.estimatedCost.subtotalAmount.amount}</td>
+            <td>
+              £{Number(cart.estimatedCost.subtotalAmount.amount).toFixed(2)}
+            </td>
           </tr>
         </tfoot>
       </table>

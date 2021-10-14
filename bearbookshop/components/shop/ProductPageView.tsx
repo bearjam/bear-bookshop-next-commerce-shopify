@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Button } from '../inputs'
 import { useCart } from '~/shopify/storefront/cart'
 import AddToBasketButton from './AddToBasketButton'
+import Link from 'next/link'
 
 type Props = {
   product: ProductFragment
@@ -34,23 +35,13 @@ const ProductPageView = ({ product }: Props) => {
     setQuantity((previous) => (quantity > 1 ? previous - 1 : previous))
   }
 
-  const { addItem } = useCart()
-
-  const addProduct = async () => {
-    try {
-      await addItem({
-        merchandiseId: String(variant.id),
-        quantity,
-      })
-    } catch (error) {
-      console.log({ error })
-    }
-  }
   return (
     <div className={css.root}>
-      <a href="../">
-        <h4>Back to all books</h4>
-      </a>
+      <Link href="../">
+        <a>
+          <h4>Back</h4>
+        </a>
+      </Link>
       <div className={css.main}>
         <div className={css.title}>
           <h3>{title}</h3>
@@ -64,7 +55,7 @@ const ProductPageView = ({ product }: Props) => {
                 src={imgURL}
                 alt="book cover"
                 layout="fill"
-                objectFit="contain"
+                objectFit="cover"
               />
             </div>
           ) : (
