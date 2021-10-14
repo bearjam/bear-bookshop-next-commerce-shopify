@@ -45,10 +45,6 @@ const IndexPage = ({
               <ProductListItem key={ps.handle} product={ps as Product} />
             ))}
           </ProductList>
-          {/* {products.map((ps, i) => (
-              <BookCard key={ps.handle} product={ps as Product} />
-            ))} */}
-
           <Flex center>
             <ButtonLink href="/shop">Shop all books</ButtonLink>
           </Flex>

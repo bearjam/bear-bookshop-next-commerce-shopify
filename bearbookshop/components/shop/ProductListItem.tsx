@@ -43,6 +43,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
                   src={imageSrc}
                   width={250}
                   height={300}
+                  objectFit="cover"
                   alt={altText ?? 'Book cover image'}
                 />
               ) : (

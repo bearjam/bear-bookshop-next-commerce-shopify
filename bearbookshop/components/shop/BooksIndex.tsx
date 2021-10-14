@@ -1,6 +1,6 @@
 import { AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useDebouncedCallback } from 'use-debounce'
 import * as z from 'zod'

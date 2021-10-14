@@ -98,3 +98,15 @@ export const useProductByHandle = (handle: string) => {
     )
   return useSWR<GetProductByHandleQuery>(handle, fetch)
 }
+
+export const useCollectionProducts = (collection: string) => {
+  const fetch = (collection: string) =>
+    storefrontFetch<
+      GetCollectionProductsQuery,
+      GetCollectionProductsQueryVariables
+    >(getCollectionProductsQuery, {
+      query: `title:${collection}`,
+      first: 100,
+    }).then((x) => x.collections.edges[0].node)
+  return useSWR(collection, fetch)
+}
