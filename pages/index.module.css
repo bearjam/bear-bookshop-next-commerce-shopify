@@ -55,3 +55,7 @@
     @apply pt-10 max-w-sm;
   }
 }
+
+.button {
+  @apply flex justify-center mt-2;
+}
