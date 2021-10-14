@@ -83,7 +83,7 @@ export const CartProvider = ({ children }: Props) => {
 
   const [totalItems, setTotalItems] = useState(0)
   useEffect(() => {
-    if (!cart && error) {
+    if (!cart || error) {
       Cookies.remove(SHOPIFY_CART_ID_COOKIE)
       mutate()
     }
