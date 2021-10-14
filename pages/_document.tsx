@@ -1,7 +1,10 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
+import { getCssText } from 'stitches.config'
 
 class MyDocument extends Document {
   render() {
+    const styles = getCssText()
+
     return (
       <Html>
         <Head>
@@ -12,6 +15,7 @@ class MyDocument extends Document {
             }
             rel="stylesheet"
           />
+          <style dangerouslySetInnerHTML={{ __html: styles }} />
         </Head>
         <body className="loading">
           <Main />
